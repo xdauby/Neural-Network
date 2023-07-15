@@ -1,0 +1,1 @@
+all: ; g++ -std=c++0x -Wall -o main main.cpp node.hpp node.cpp edge.hpp edge.cpp neural_network.cpp neural_network.hpp
