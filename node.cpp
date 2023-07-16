@@ -1,4 +1,6 @@
 #include "node.hpp"
+#include "edge.hpp"
+#include <cmath>
 
 Node::Node(std::string nodeType, std::string activationType) : preActivationValue(0), 
                                                                postActivationValue(0), 
@@ -11,12 +13,45 @@ Node::Node(std::string nodeType, std::string activationType) : preActivationValu
 
 }
 
-void Node::addIncomingEgde(Edge edge)
+        
+void Node::setPreActivationValue(double value)
+{
+    preActivationValue = value;
+}
+
+double Node::getPreActivationValue()
+{
+    return preActivationValue;
+}
+
+void Node::addToPreActivationValue(double value)
+{
+    preActivationValue += value;
+}
+
+
+void Node::addIncomingEgde(Edge *edge)
 {
     incomingEdges.push_back(edge); 
 }
 
-void Node::addOutgoingEgde(Edge edge)
+void Node::addOutgoingEgde(Edge *edge)
 {
     outgoingEdges.push_back(edge); 
+}
+
+
+void Node::forwardPropagation()
+{
+
+    if (activationType == "linear") {
+        postActivationValue = preActivationValue;
+
+    } else if (activationType == "sigmoid") {
+        postActivationValue = std::exp(preActivationValue) / (1 + std::exp(preActivationValue));
+    }    
+
+    for(unsigned int edgeIndex {0}; edgeIndex < outgoingEdges.size(); edgeIndex++){
+        outgoingEdges[edgeIndex]->forwardPropagation(postActivationValue);
+    }
 }

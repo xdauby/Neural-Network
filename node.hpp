@@ -4,7 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <string> 
-#include "edge.hpp"
+
+class Edge;
 
 class Node{
 
@@ -19,15 +20,22 @@ class Node{
         std::string nodeType;
         std::string activationType;
 
-        std::vector<Edge> incomingEdges;
-        std::vector<Edge> outgoingEdges;
+        std::vector<Edge *> incomingEdges;
+        std::vector<Edge *> outgoingEdges;
 
     public:
 
         Node(std::string nodeType, std::string activationType);
         
-        void addIncomingEgde(Edge edge);
-        void addOutgoingEgde(Edge edge);
+        void setPreActivationValue(double value);
+        double getPreActivationValue();
+        
+        void addToPreActivationValue(double value);
+
+        void addIncomingEgde(Edge *edge);
+        void addOutgoingEgde(Edge *edge);
+        void forwardPropagation();
+
 
 };
 

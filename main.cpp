@@ -13,4 +13,9 @@ int main()
 
     NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize);
 
+    // Node n1("input", "..");
+    // Node n2("input", "..");
+    // Edge g(&n1, &n2);
+
+
 }
