@@ -11,9 +11,10 @@ class NeuralNetwork{
 
 private:
     std::vector< std::vector< Node > > layers;
+    std::string lossFunction;
 
 public:
-    NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSizes, int outputLayerSize);
+    NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSizes, int outputLayerSize, std::string lossFunction);
     double forwardPropagation(std::vector<double> inputData);
 };
 

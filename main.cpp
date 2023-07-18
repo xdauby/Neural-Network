@@ -7,15 +7,16 @@
 int main()
 {
 
-    int inputLayerSize {10};
-    std::vector<int> hiddenLayerSizes {2,2};
-    int outputLayerSize {2};
+    int inputLayerSize {2};
+    std::vector<int> hiddenLayerSizes {2};
+    int outputLayerSize {1};
 
-    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize);
+    std::string lossFunction = "None";
+    std::vector<double> inputData = {1.5, 0.5};
 
-    // Node n1("input", "..");
-    // Node n2("input", "..");
-    // Edge g(&n1, &n2);
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, lossFunction);
+    
+    nn.forwardPropagation(inputData);
 
 
 }

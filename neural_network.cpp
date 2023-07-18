@@ -1,8 +1,12 @@
 #include "neural_network.hpp"
 
-NeuralNetwork::NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSizes, int outputLayerSize) {
+NeuralNetwork::NeuralNetwork(int inputLayerSize, 
+                             std::vector<int> hiddenLayerSizes, 
+                             int outputLayerSize, 
+                             std::string lossFunction) : lossFunction(lossFunction)
+{
     
-    layers.resize(2 + hiddenLayerSizes.size()); 
+    this->layers.resize(2 + hiddenLayerSizes.size()); 
 
     std::string nodeType;
     std::string activationType;
@@ -25,24 +29,40 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSiz
         }
 
         for(int nodeIndex {0}; nodeIndex <  layerSize; nodeIndex++){
-            
-            layers[layerIndex].push_back(Node(nodeType, activationType));
-
-            if(layerIndex > 0){
-                //neural network fully connected
-                for(unsigned int previousLayerNodeIndex {0}; previousLayerNodeIndex <  layers[layerIndex - 1].size(); previousLayerNodeIndex++){
-                    Edge(&layers[layerIndex - 1][previousLayerNodeIndex], &layers[layerIndex][nodeIndex]);
-                }
-            }
+        
+            this->layers[layerIndex].push_back(Node(nodeType, activationType));
 
         }
 
     }
 
+    //neural network fully connected
+    for(unsigned int layerIndex {0}; layerIndex < layers.size() - 1; layerIndex++){
+            for(int inputNodeIndex {0}; inputNodeIndex <  layerSize; inputNodeIndex++){
+                for(unsigned int outputNodeIndex {0}; outputNodeIndex <  layers[layerIndex + 1].size(); outputNodeIndex++){
+                    
+                    Node *input = &layers[layerIndex][inputNodeIndex];
+                    Node *output = &layers[layerIndex + 1][outputNodeIndex];
+                    
+                    new Edge(input, output);
+                
+                }
+            }
+        }
+    
+
+
+    //layers[0][0].forwardPropagation();
+  
+
+
 }
 
 double  NeuralNetwork::forwardPropagation(std::vector<double> inputData)
 {
+//   layers[1][0].forwardPropagation();
+//     layers[0][1].forwardPropagation();
+
     if (inputData.size() == layers[0].size()) {
 
         //initialize input nodes
@@ -52,11 +72,30 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData)
 
         //propagate forward
 
-        for(unsigned int layerIndex {0}; layerIndex < layers.size(); layerIndex++){
+        layers[0][0].forwardPropagation();
+
+        for(unsigned int layerIndex {0}; layerIndex < layers.size() - 1; layerIndex++){
             for(unsigned int nodeIndex {0}; nodeIndex <  layers[layerIndex].size(); nodeIndex++){
+                std::cout << "Layer : " << layerIndex << ", Node : "<< nodeIndex <<std::endl;
+                std::cout << "Pre Activation Value : " << layers[layerIndex][nodeIndex].getPreActivationValue() <<std::endl;
+
                 layers[layerIndex][nodeIndex].forwardPropagation();
+                                
+                std::cout << "Post Activation Value : " << layers[layerIndex][nodeIndex].getPostActivationValue() <<std::endl;
+                std::cout<<std::endl;
             }
         }
+
+        double computedLoss = 0;
+
+        if(lossFunction == "None"){
+            double outputLayerSize = layers.size() - 1;
+            for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerSize].size(); nodeIndex++){
+                computedLoss += layers[outputLayerSize][nodeIndex].getPostActivationValue();
+            }
+        }
+
+        return computedLoss;
 
 
 

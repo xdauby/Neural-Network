@@ -17,6 +17,7 @@ class Edge {
     public:
         Edge(Node *incomingNode, Node *outgoingNode);
         void forwardPropagation(double value);
+        void doSom();
 
 };
 

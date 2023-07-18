@@ -24,6 +24,18 @@ double Node::getPreActivationValue()
     return preActivationValue;
 }
 
+
+void Node::setPostActivationValue(double value)
+{
+    postActivationValue = value;
+}
+
+double Node::getPostActivationValue()
+{
+    return postActivationValue;
+}
+
+
 void Node::addToPreActivationValue(double value)
 {
     preActivationValue += value;
@@ -43,6 +55,7 @@ void Node::addOutgoingEgde(Edge *edge)
 
 void Node::forwardPropagation()
 {
+   
 
     if (activationType == "linear") {
         postActivationValue = preActivationValue;
@@ -50,8 +63,11 @@ void Node::forwardPropagation()
     } else if (activationType == "sigmoid") {
         postActivationValue = std::exp(preActivationValue) / (1 + std::exp(preActivationValue));
     }    
+    
+    std::cout << "ccc";
 
     for(unsigned int edgeIndex {0}; edgeIndex < outgoingEdges.size(); edgeIndex++){
+
         outgoingEdges[edgeIndex]->forwardPropagation(postActivationValue);
     }
 }

@@ -12,7 +12,14 @@ Edge::Edge(Node *incomingNode, Node *outgoingNode) : weight(1),
 }
 
 
+
 void Edge::forwardPropagation(double value)
 {
     outgoingNode->addToPreActivationValue(value * weight);
+}
+
+void Edge::doSom()
+{
+    std::cout << "in edg";
+
 }
