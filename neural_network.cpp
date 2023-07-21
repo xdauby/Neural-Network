@@ -1,4 +1,5 @@
 #include "neural_network.hpp"
+#include <stdexcept>
 
 NeuralNetwork::NeuralNetwork(int inputLayerSize, 
                              std::vector<int> hiddenLayerSizes, 
@@ -62,45 +63,38 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
 double  NeuralNetwork::forwardPropagation(std::vector<double> inputData)
 {
 
-    if (inputData.size() == layers[0].size()) {
-
-        //initialize input nodes
-        for(unsigned int nodeIndex {0}; nodeIndex<layers[0].size(); nodeIndex++){
-            layers[0][nodeIndex].setPreActivationValue(inputData[nodeIndex]);
-        }
-
-        //propagate forward
-        for(unsigned int layerIndex {0}; layerIndex < layers.size() - 1; layerIndex++){
-            for(unsigned int nodeIndex {0}; nodeIndex <  layers[layerIndex].size(); nodeIndex++){
-                std::cout << "Layer : " << layerIndex << ", Node : "<< nodeIndex <<std::endl;
-                std::cout << "Pre Activation Value : " << layers[layerIndex][nodeIndex].getPreActivationValue() <<std::endl;
-
-                layers[layerIndex][nodeIndex].forwardPropagation();
-                                
-                std::cout << "Post Activation Value : " << layers[layerIndex][nodeIndex].getPostActivationValue() <<std::endl;
-                std::cout<<std::endl;
-            }
-        }
-
-        double computedLoss = 0;
-
-        if(lossFunction == "None"){
-            double outputLayerSize = layers.size() - 1;
-            for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerSize].size(); nodeIndex++){
-                computedLoss += layers[outputLayerSize][nodeIndex].getPostActivationValue();
-            }
-        }
-
-        return computedLoss;
-
-
-
-
-
-    } else {
-
+    if (inputData.size() == layers[0].size()){
+        throw std::invalid_argument("Input size different from number of input Node");
     }
 
+    //initialize input nodes
+    for(unsigned int nodeIndex {0}; nodeIndex<layers[0].size(); nodeIndex++){
+        layers[0][nodeIndex].setPreActivationValue(inputData[nodeIndex]);
+    }
+
+    //propagate forward
+    for(unsigned int layerIndex {0}; layerIndex < layers.size() - 1; layerIndex++){
+        for(unsigned int nodeIndex {0}; nodeIndex <  layers[layerIndex].size(); nodeIndex++){
+            std::cout << "Layer : " << layerIndex << ", Node : "<< nodeIndex <<std::endl;
+            std::cout << "Pre Activation Value : " << layers[layerIndex][nodeIndex].getPreActivationValue() <<std::endl;
+
+            layers[layerIndex][nodeIndex].forwardPropagation();
+                            
+            std::cout << "Post Activation Value : " << layers[layerIndex][nodeIndex].getPostActivationValue() <<std::endl;
+            std::cout<<std::endl;
+        }
+    }
+
+    double computedLoss = 0;
+
+    if(lossFunction == "None"){
+        double outputLayerSize = layers.size() - 1;
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerSize].size(); nodeIndex++){
+            computedLoss += layers[outputLayerSize][nodeIndex].getPostActivationValue();
+        }
+    }
+
+    return computedLoss;
 
 }
 
