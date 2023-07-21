@@ -60,11 +60,19 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
 
 }
 
-double  NeuralNetwork::forwardPropagation(std::vector<double> inputData)
+double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels)
 {
 
-    if (inputData.size() == layers[0].size()){
-        throw std::invalid_argument("Input size different from number of input Node");
+    double computedLoss = 0;
+    double outputLayerIndex = layers.size() - 1;
+    std::vector<double> outputValues = getOutputValues();
+
+    if (inputData.size() != layers[0].size()){
+        throw std::invalid_argument("inputData size different from number of input Nodes !");
+    }
+
+    if (inputLabels.size() != layers[outputLayerIndex].size()){
+        throw std::invalid_argument("inputLabels size different from number of output Nodes !");
     }
 
     //initialize input nodes
@@ -85,16 +93,30 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData)
         }
     }
 
-    double computedLoss = 0;
+    
 
     if(lossFunction == "None"){
-        double outputLayerSize = layers.size() - 1;
-        for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerSize].size(); nodeIndex++){
-            computedLoss += layers[outputLayerSize][nodeIndex].getPostActivationValue();
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
+            computedLoss += outputValues[nodeIndex];
+        }
+    } else if (lossFunction == "L2 norm") {
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
+            computedLoss += (outputValues[nodeIndex] - inputLabels[nodeIndex]) * (outputValues[nodeIndex] - inputLabels[nodeIndex]);
         }
     }
 
     return computedLoss;
 
 }
+
+std::vector<double> NeuralNetwork::getOutputValues()
+{
+    std::vector<double> outputValues;   
+    double outputLayerIndex = layers.size() - 1;
+    for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
+        outputValues.push_back(layers[outputLayerIndex][nodeIndex].getPostActivationValue());
+    }
+    return outputValues;
+}
+
 

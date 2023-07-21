@@ -13,10 +13,11 @@ int main()
 
     std::string lossFunction = "None";
     std::vector<double> inputData = {1.5, 0.5};
+    std::vector<double> inputLabels = {1};
 
     NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, lossFunction);
     
-    nn.forwardPropagation(inputData);
+    nn.forwardPropagation(inputData, inputLabels);
 
 
 }

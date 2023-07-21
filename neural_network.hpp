@@ -15,7 +15,8 @@ private:
 
 public:
     NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSizes, int outputLayerSize, std::string lossFunction);
-    double forwardPropagation(std::vector<double> inputData);
+    double forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels);
+    std::vector<double> getOutputValues();
 };
 
 
