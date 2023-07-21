@@ -58,13 +58,12 @@ void Node::forwardPropagation()
    
 
     if (activationType == "linear") {
-        postActivationValue = preActivationValue;
+        postActivationValue = preActivationValue + bias;
 
     } else if (activationType == "sigmoid") {
-        postActivationValue = std::exp(preActivationValue) / (1 + std::exp(preActivationValue));
+        postActivationValue = std::exp(preActivationValue + bias) / (1 + std::exp(preActivationValue + bias));
     }    
     
-    std::cout << "ccc";
 
     for(unsigned int edgeIndex {0}; edgeIndex < outgoingEdges.size(); edgeIndex++){
 

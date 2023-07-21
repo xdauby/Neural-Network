@@ -16,7 +16,7 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
         
         if(layerIndex == 0){
             nodeType = "input";
-            activationType = "linear";
+            activationType = "linear"; 
             layerSize = inputLayerSize;
         } else if (layerIndex == (layers.size() - 1)) {
             nodeType = "output";
@@ -29,8 +29,9 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
         }
 
         for(int nodeIndex {0}; nodeIndex <  layerSize; nodeIndex++){
-        
-            this->layers[layerIndex].push_back(Node(nodeType, activationType));
+
+            Node *node = new Node(nodeType, activationType);
+            this->layers[layerIndex].push_back(*node);
 
         }
 
@@ -38,7 +39,7 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
 
     //neural network fully connected
     for(unsigned int layerIndex {0}; layerIndex < layers.size() - 1; layerIndex++){
-            for(int inputNodeIndex {0}; inputNodeIndex <  layerSize; inputNodeIndex++){
+            for(unsigned int inputNodeIndex {0}; inputNodeIndex <  layers[layerIndex].size(); inputNodeIndex++){
                 for(unsigned int outputNodeIndex {0}; outputNodeIndex <  layers[layerIndex + 1].size(); outputNodeIndex++){
                     
                     Node *input = &layers[layerIndex][inputNodeIndex];
@@ -60,8 +61,6 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
 
 double  NeuralNetwork::forwardPropagation(std::vector<double> inputData)
 {
-//   layers[1][0].forwardPropagation();
-//     layers[0][1].forwardPropagation();
 
     if (inputData.size() == layers[0].size()) {
 
@@ -71,9 +70,6 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData)
         }
 
         //propagate forward
-
-        layers[0][0].forwardPropagation();
-
         for(unsigned int layerIndex {0}; layerIndex < layers.size() - 1; layerIndex++){
             for(unsigned int nodeIndex {0}; nodeIndex <  layers[layerIndex].size(); nodeIndex++){
                 std::cout << "Layer : " << layerIndex << ", Node : "<< nodeIndex <<std::endl;
@@ -102,7 +98,7 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData)
 
 
     } else {
-       // throw error
+
     }
 
 
