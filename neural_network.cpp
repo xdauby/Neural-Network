@@ -30,7 +30,6 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
         }
 
         for(int nodeIndex {0}; nodeIndex <  layerSize; nodeIndex++){
-
             Node *node = new Node(nodeType, activationType);
             this->layers[layerIndex].push_back(*node);
 
@@ -42,21 +41,13 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
     for(unsigned int layerIndex {0}; layerIndex < layers.size() - 1; layerIndex++){
             for(unsigned int inputNodeIndex {0}; inputNodeIndex <  layers[layerIndex].size(); inputNodeIndex++){
                 for(unsigned int outputNodeIndex {0}; outputNodeIndex <  layers[layerIndex + 1].size(); outputNodeIndex++){
-                    
                     Node *input = &layers[layerIndex][inputNodeIndex];
                     Node *output = &layers[layerIndex + 1][outputNodeIndex];
-                    
                     new Edge(input, output);
                 
                 }
             }
         }
-    
-
-
-    //layers[0][0].forwardPropagation();
-  
-
 
 }
 
@@ -108,7 +99,7 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
     return computedLoss;
 
 }
-
+ 
 std::vector<double> NeuralNetwork::getOutputValues()
 {
     std::vector<double> outputValues;   
@@ -120,3 +111,16 @@ std::vector<double> NeuralNetwork::getOutputValues()
 }
 
 
+std::vector<double> NeuralNetwork::getWeights()
+{
+    std::vector<double> weights;
+    for(unsigned int nodeLayer {0}; nodeLayer < layers.size(); nodeLayer++){
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
+            std::vector<double> nodeWeights = layers[nodeLayer][nodeIndex].getIncomingWeights();
+            for(unsigned int weightIndex {0}; weightIndex < nodeWeights.size(); weightIndex++){
+                weights.push_back(nodeWeights[weightIndex]);
+            }
+        }
+    }
+    return weights;
+}

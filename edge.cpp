@@ -18,8 +18,7 @@ void Edge::forwardPropagation(double value)
     outgoingNode->addToPreActivationValue(value * weight);
 }
 
-void Edge::doSom()
+double Edge::getWeight()
 {
-    std::cout << "in edg";
-
+    return weight;
 }

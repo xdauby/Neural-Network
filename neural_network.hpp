@@ -2,7 +2,7 @@
 #define NEURAL_NETWORK_HPP
 
 #include <iostream>
-#include <array> 
+#include <vector> 
 #include "node.hpp"
 #include "edge.hpp"
 
@@ -17,6 +17,7 @@ public:
     NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSizes, int outputLayerSize, std::string lossFunction);
     double forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels);
     std::vector<double> getOutputValues();
+    std::vector<double> getWeights();
 };
 
 

@@ -33,15 +33,14 @@ class Node{
         
         void setPreActivationValue(double value);
         double getPreActivationValue();
-
         void setPostActivationValue(double value);
         double getPostActivationValue();
-        
+        std::vector<double> getIncomingWeights();
         void addToPreActivationValue(double value);
-
         void addIncomingEgde(Edge *edge);
         void addOutgoingEgde(Edge *edge);
         void forwardPropagation();
+        
         void test(){};
 
 

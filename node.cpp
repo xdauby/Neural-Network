@@ -55,8 +55,6 @@ void Node::addOutgoingEgde(Edge *edge)
 
 void Node::forwardPropagation()
 {
-   
-
     if (activationType == "linear") {
         postActivationValue = preActivationValue + bias;
 
@@ -69,4 +67,16 @@ void Node::forwardPropagation()
 
         outgoingEdges[edgeIndex]->forwardPropagation(postActivationValue);
     }
+}
+
+
+std::vector<double> Node::getIncomingWeights()
+{
+    std::vector<double> incomingWeights;
+    incomingWeights.push_back(bias);
+    for(unsigned int edgeIndex {0}; edgeIndex < incomingEdges.size(); edgeIndex++){
+        double edgeWeight = incomingEdges[edgeIndex]->getWeight();
+        incomingWeights.push_back(edgeWeight);
+    }
+    return incomingWeights;
 }
