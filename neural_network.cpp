@@ -6,9 +6,8 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
                              int outputLayerSize, 
                              std::string lossFunction) : lossFunction(lossFunction)
 {
-    
-    this->layers.resize(2 + hiddenLayerSizes.size()); 
-
+    nWeights = 0;
+    layers.resize(2 + hiddenLayerSizes.size()); 
     std::string nodeType;
     std::string activationType;
     int layerSize;
@@ -31,8 +30,8 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
 
         for(int nodeIndex {0}; nodeIndex <  layerSize; nodeIndex++){
             Node *node = new Node(nodeType, activationType);
-            this->layers[layerIndex].push_back(*node);
-
+            layers[layerIndex].push_back(*node);
+            nWeights++;
         }
 
     }
@@ -44,7 +43,7 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
                     Node *input = &layers[layerIndex][inputNodeIndex];
                     Node *output = &layers[layerIndex + 1][outputNodeIndex];
                     new Edge(input, output);
-                
+                    nWeights++;
                 }
             }
         }
@@ -99,7 +98,30 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
     return computedLoss;
 
 }
- 
+
+void NeuralNetwork::setWeights(std::vector<double> values)
+{
+    if (values.size() != nWeights){
+        throw std::invalid_argument("Vector of new weights (values) size different from number of weights !");
+    }
+
+    int cpt = 0;
+    for(unsigned int nodeLayer {0}; nodeLayer < layers.size(); nodeLayer++){
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
+            double currentBias = values[cpt];
+            layers[nodeLayer][nodeIndex].setBias(currentBias);
+            cpt++;
+            std::vector<Edge *> nodeIncomingEdges = layers[nodeLayer][nodeIndex].getIncomingEdges();
+            for(unsigned int weightIndex {0}; weightIndex < nodeIncomingEdges.size(); weightIndex++){
+                Edge *currentIncomingEdges = nodeIncomingEdges[weightIndex];
+                currentIncomingEdges->setWeight(values[cpt]);
+                cpt++;
+            }
+        }
+    }
+}
+
+
 std::vector<double> NeuralNetwork::getOutputValues()
 {
     std::vector<double> outputValues;   

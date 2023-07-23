@@ -16,6 +16,7 @@ class Edge {
 
     public:
         Edge(Node *incomingNode, Node *outgoingNode);
+        void setWeight(double value);
         void forwardPropagation(double value);
         double getWeight();
 

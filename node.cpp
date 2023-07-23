@@ -19,20 +19,29 @@ void Node::setPreActivationValue(double value)
     preActivationValue = value;
 }
 
-double Node::getPreActivationValue()
-{
-    return preActivationValue;
-}
-
-
 void Node::setPostActivationValue(double value)
 {
     postActivationValue = value;
 }
 
+void Node::setBias(double value)
+{
+    bias = value;
+}
+
+double Node::getPreActivationValue()
+{
+    return preActivationValue;
+}
+
 double Node::getPostActivationValue()
 {
     return postActivationValue;
+}
+
+std::vector<Edge *> Node::getIncomingEdges()
+{
+    return incomingEdges;
 }
 
 
@@ -62,9 +71,7 @@ void Node::forwardPropagation()
         postActivationValue = std::exp(preActivationValue + bias) / (1 + std::exp(preActivationValue + bias));
     }    
     
-
     for(unsigned int edgeIndex {0}; edgeIndex < outgoingEdges.size(); edgeIndex++){
-
         outgoingEdges[edgeIndex]->forwardPropagation(postActivationValue);
     }
 }

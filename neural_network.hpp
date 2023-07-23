@@ -12,12 +12,15 @@ class NeuralNetwork{
 private:
     std::vector< std::vector< Node > > layers;
     std::string lossFunction;
+    unsigned int nWeights;
 
 public:
     NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSizes, int outputLayerSize, std::string lossFunction);
-    double forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels);
-    std::vector<double> getOutputValues();
+    void setWeights(std::vector<double> values);
     std::vector<double> getWeights();
+    std::vector<double> getOutputValues();
+    double forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels);
+    
 };
 
 

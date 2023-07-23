@@ -10,8 +10,10 @@ Edge::Edge(Node *incomingNode, Node *outgoingNode) : weight(1),
     incomingNode->addOutgoingEgde(this);
 
 }
-
-
+void Edge::setWeight(double value)
+{
+    weight = value;
+}
 
 void Edge::forwardPropagation(double value)
 {
