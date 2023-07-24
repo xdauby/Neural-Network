@@ -38,12 +38,12 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
 
     //neural network fully connected
     for(unsigned int layerIndex {0}; layerIndex < layers.size() - 1; layerIndex++){
-            for(unsigned int inputNodeIndex {0}; inputNodeIndex <  layers[layerIndex].size(); inputNodeIndex++){
-                for(unsigned int outputNodeIndex {0}; outputNodeIndex <  layers[layerIndex + 1].size(); outputNodeIndex++){
-                    Node *input = &layers[layerIndex][inputNodeIndex];
-                    Node *output = &layers[layerIndex + 1][outputNodeIndex];
-                    new Edge(input, output);
-                    nWeights++;
+        for(unsigned int inputNodeIndex {0}; inputNodeIndex <  layers[layerIndex].size(); inputNodeIndex++){
+            for(unsigned int outputNodeIndex {0}; outputNodeIndex <  layers[layerIndex + 1].size(); outputNodeIndex++){
+                Node *input = &layers[layerIndex][inputNodeIndex];
+                Node *output = &layers[layerIndex + 1][outputNodeIndex];
+                new Edge(input, output);
+                nWeights++;
                 }
             }
         }
@@ -145,4 +145,9 @@ std::vector<double> NeuralNetwork::getWeights()
         }
     }
     return weights;
+}
+
+unsigned int NeuralNetwork::getnWeights()
+{
+    return nWeights;
 }
