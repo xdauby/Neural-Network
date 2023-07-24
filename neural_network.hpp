@@ -21,7 +21,7 @@ public:
     std::vector<double> getWeights();
     std::vector<double> getOutputValues();
     double forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels);
-    
+    void backwardPropagation();
 };
 
 

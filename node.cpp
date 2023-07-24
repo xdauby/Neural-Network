@@ -4,9 +4,9 @@
 
 Node::Node(std::string nodeType, std::string activationType) : preActivationValue(0), 
                                                                postActivationValue(0), 
-                                                               delta(0), 
+                                                               delta(1), 
                                                                bias(0), 
-                                                               biasDelta(0), 
+                                                               biasDelta(1), 
                                                                nodeType(nodeType), 
                                                                activationType(activationType)
 {
@@ -28,6 +28,12 @@ void Node::setBias(double value)
 {
     bias = value;
 }
+
+void Node::setDelta(double value)
+{
+    delta = value;
+}       
+
 
 double Node::getPreActivationValue()
 {
@@ -63,12 +69,13 @@ void Node::addOutgoingEgde(Edge *edge)
 
 
 void Node::forwardPropagation()
-{
+{   
+    preActivationValue += bias;
     if (activationType == "linear") {
-        postActivationValue = preActivationValue + bias;
+        postActivationValue = preActivationValue;
 
     } else if (activationType == "sigmoid") {
-        postActivationValue = std::exp(preActivationValue + bias) / (1 + std::exp(preActivationValue + bias));
+        postActivationValue = std::exp(preActivationValue) / (1 + std::exp(preActivationValue));
     }    
     
     for(unsigned int edgeIndex {0}; edgeIndex < outgoingEdges.size(); edgeIndex++){
@@ -86,4 +93,21 @@ std::vector<double> Node::getIncomingWeights()
         incomingWeights.push_back(edgeWeight);
     }
     return incomingWeights;
+}
+
+
+void Node::backwardPropagation()
+{
+    if (activationType == "linear") {
+        delta *= 1;
+    } else if (activationType == "sigmoid") {
+        delta *= postActivationValue * (1 - postActivationValue);
+    }
+
+    biasDelta = delta;
+
+    for(unsigned int edgeIndex {0}; edgeIndex < incomingEdges.size(); edgeIndex++){
+        incomingEdges[edgeIndex]->backwardPropagation(delta);//
+    }
+
 }

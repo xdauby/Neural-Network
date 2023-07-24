@@ -83,8 +83,6 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
         }
     }
 
-    
-
     if(lossFunction == "None"){
         for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
             computedLoss += outputValues[nodeIndex];
@@ -150,4 +148,13 @@ std::vector<double> NeuralNetwork::getWeights()
 unsigned int NeuralNetwork::getnWeights()
 {
     return nWeights;
+}
+
+void NeuralNetwork::backwardPropagation()
+{
+    for(unsigned int nodeLayer {layers.size() - 1}; nodeLayer >= 0; nodeLayer--){
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
+            layers[nodeLayer][nodeIndex].backwardPropagation();
+        }
+    }
 }

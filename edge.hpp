@@ -19,6 +19,7 @@ class Edge {
         void setWeight(double value);
         void forwardPropagation(double value);
         double getWeight();
+        void backwardPropagation(double delta);
 
 };
 

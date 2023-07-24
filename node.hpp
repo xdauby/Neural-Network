@@ -33,7 +33,8 @@ class Node{
         
         void setPreActivationValue(double value);
         void setPostActivationValue(double value);
-        void setBias(double value);       
+        void setBias(double value);
+        void setDelta(double value);       
         double getPreActivationValue();
         double getPostActivationValue();
         std::vector<double> getIncomingWeights();
@@ -42,6 +43,8 @@ class Node{
         void addIncomingEgde(Edge *edge);
         void addOutgoingEgde(Edge *edge);
         void forwardPropagation();
+        void backwardPropagation();
+
 
 };
 
