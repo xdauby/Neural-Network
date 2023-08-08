@@ -1,5 +1,6 @@
 #include "neural_network.hpp"
 #include <stdexcept>
+#include <cmath>
 
 NeuralNetwork::NeuralNetwork(int inputLayerSize, 
                              std::vector<int> hiddenLayerSizes, 
@@ -53,9 +54,7 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
 double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels)
 {
 
-    double computedLoss = 0;
     double outputLayerIndex = layers.size() - 1;
-    std::vector<double> outputValues = getOutputValues();
 
     if (inputData.size() != layers[0].size()){
         throw std::invalid_argument("inputData size different from number of input Nodes !");
@@ -71,17 +70,14 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
     }
 
     //propagate forward
-    for(unsigned int layerIndex {0}; layerIndex < layers.size() - 1; layerIndex++){
+    for(unsigned int layerIndex {0}; layerIndex < layers.size(); layerIndex++){
         for(unsigned int nodeIndex {0}; nodeIndex <  layers[layerIndex].size(); nodeIndex++){
-            std::cout << "Layer : " << layerIndex << ", Node : "<< nodeIndex <<std::endl;
-            std::cout << "Pre Activation Value : " << layers[layerIndex][nodeIndex].getPreActivationValue() <<std::endl;
-
             layers[layerIndex][nodeIndex].forwardPropagation();
-                            
-            std::cout << "Post Activation Value : " << layers[layerIndex][nodeIndex].getPostActivationValue() <<std::endl;
-            std::cout<<std::endl;
         }
     }
+
+    double computedLoss = 0;
+    std::vector<double> outputValues = getOutputValues();
 
     if(lossFunction == "None"){
         for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
@@ -91,6 +87,7 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
         for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
             computedLoss += (outputValues[nodeIndex] - inputLabels[nodeIndex]) * (outputValues[nodeIndex] - inputLabels[nodeIndex]);
         }
+            computedLoss = std::sqrt(computedLoss);
     }
 
     return computedLoss;
@@ -152,7 +149,7 @@ unsigned int NeuralNetwork::getnWeights()
 
 void NeuralNetwork::backwardPropagation()
 {
-    for(unsigned int nodeLayer {layers.size() - 1}; nodeLayer >= 0; nodeLayer--){
+    for(int nodeLayer = layers.size() - 1; nodeLayer >= 0; nodeLayer--){
         for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
             layers[nodeLayer][nodeIndex].backwardPropagation();
         }

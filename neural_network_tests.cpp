@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include <stdio.h>
+#include <cmath>
 #include "neural_network.hpp"
 #include "edge.hpp"
 #include "node.hpp"
@@ -47,10 +49,51 @@ void setWeightsTest()
     assert(expectedWeights == weights);
 }
 
+void forwardPropagationTest()
+{
+
+    int inputLayerSize {2};
+    std::vector<int> hiddenLayerSizes {2};
+    int outputLayerSize {1};
+    std::string lossFunction = "None";
+    
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, lossFunction); 
+    
+    std::vector<double> inputData = {1.5, 0.5};
+    std::vector<double> inputLabels = {5};    
+    double output = nn.forwardPropagation(inputData, inputLabels);
+    double expectedOutput = 0.853409204;
+
+    assert(std::abs(output - expectedOutput) < 1e-7);
+
+}
+
+void forwardPropagationL2Test()
+{
+
+    int inputLayerSize {2};
+    std::vector<int> hiddenLayerSizes {2};
+    int outputLayerSize {2};
+    std::string lossFunction = "L2 norm";
+
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, lossFunction); 
+    
+    std::vector<double> inputData = {1.5, 0.5};
+    std::vector<double> inputLabels = {2, 3};    
+    double output = nn.forwardPropagation(inputData, inputLabels);
+    double expectedOutput = 2.433623327;
+
+    assert(std::abs(output - expectedOutput) < 1e-7);
+
+}
+
+
 
 int main()
 {
     weightsNumberTest();
     getWeightsTest();
     setWeightsTest();
+    forwardPropagationTest();
+    forwardPropagationL2Test();
 }
