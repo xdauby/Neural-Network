@@ -10,12 +10,6 @@ class Edge;
 class Node{
 
     private:
-
-        
-        
-
-    public:
-        
         double preActivationValue;
         double postActivationValue;
         double delta;
@@ -27,10 +21,11 @@ class Node{
 
         std::vector<Edge *> incomingEdges;
         std::vector<Edge *> outgoingEdges;
-
-
-        Node(std::string nodeType, std::string activationType);
+  
+    public:
         
+        Node(std::string nodeType, std::string activationType);
+    
         void setPreActivationValue(double value);
         void setPostActivationValue(double value);
         void setBias(double value);
@@ -38,6 +33,7 @@ class Node{
         double getPreActivationValue();
         double getPostActivationValue();
         std::vector<double> getIncomingWeights();
+        std::vector<double> getIncomingDeltas();
         std::vector<Edge *> getIncomingEdges();
         void addToPreActivationValue(double value);
         void addIncomingEgde(Edge *edge);

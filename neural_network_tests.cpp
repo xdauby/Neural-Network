@@ -87,7 +87,29 @@ void forwardPropagationL2Test()
 
 }
 
+void backwardPropagationTest()
+{
 
+    int inputLayerSize {2};
+    std::vector<int> hiddenLayerSizes {2};
+    int outputLayerSize {1};
+    std::string lossFunction = "None";
+
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, lossFunction); 
+    
+    std::vector<double> inputData = {1.5, 0.5};
+    std::vector<double> inputLabels = {2};    
+    double output = nn.forwardPropagation(inputData, inputLabels);
+    // double expectedOutput = 2.433623327;
+    nn.backwardPropagation();
+
+    //assert(std::abs(output - expectedOutput) < 1e-7);
+    std::vector<double> weights = nn.getWeights();
+    
+    for(int weightIndex = 0; weightIndex < weights.size(); weightIndex++){
+        std::cout << weights[weightIndex]<< " ; ";
+    }
+}
 
 int main()
 {
@@ -96,4 +118,5 @@ int main()
     setWeightsTest();
     forwardPropagationTest();
     forwardPropagationL2Test();
+    backwardPropagationTest();
 }

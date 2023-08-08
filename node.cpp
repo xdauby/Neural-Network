@@ -95,6 +95,17 @@ std::vector<double> Node::getIncomingWeights()
     return incomingWeights;
 }
 
+std::vector<double> Node::getIncomingDeltas()
+{
+    std::vector<double> incomingDeltas;
+    incomingDeltas.push_back(biasDelta);
+    for(unsigned int edgeIndex {0}; edgeIndex < incomingEdges.size(); edgeIndex++){
+        double edgeDelta = incomingEdges[edgeIndex]->getWeightDelta();
+        incomingDeltas.push_back(edgeDelta);
+    }
+    return incomingDeltas;
+}
+
 
 void Node::backwardPropagation()
 {

@@ -19,6 +19,7 @@ public:
     void setWeights(std::vector<double> values);
     unsigned int getnWeights();
     std::vector<double> getWeights();
+    std::vector<double> getDeltas();
     std::vector<double> getOutputValues();
     double forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels);
     void backwardPropagation();

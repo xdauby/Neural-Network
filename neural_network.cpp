@@ -82,6 +82,7 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
     if(lossFunction == "None"){
         for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
             computedLoss += outputValues[nodeIndex];
+            layers[outputLayerIndex][nodeIndex].setDelta(1.0);
         }
     } else if (lossFunction == "L2 norm") {
         for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
@@ -140,6 +141,20 @@ std::vector<double> NeuralNetwork::getWeights()
         }
     }
     return weights;
+}
+
+std::vector<double> NeuralNetwork::getDeltas()
+{
+    std::vector<double> deltas;
+    for(unsigned int nodeLayer {0}; nodeLayer < layers.size(); nodeLayer++){
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
+            std::vector<double> nodeDeltas = layers[nodeLayer][nodeIndex].getIncomingDeltas();
+            for(unsigned int deltaIndex {0}; deltaIndex < nodeDeltas.size(); deltaIndex++){
+                deltas.push_back(nodeDeltas[deltaIndex]);
+            }
+        }
+    }
+    return deltas;
 }
 
 unsigned int NeuralNetwork::getnWeights()

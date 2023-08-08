@@ -25,6 +25,11 @@ double Edge::getWeight()
     return weight;
 }
 
+double Edge::getWeightDelta()
+{
+    return weightDelta;
+}
+
 void Edge::backwardPropagation(double delta)
 {
     weightDelta =  delta * incomingNode->getPostActivationValue();
