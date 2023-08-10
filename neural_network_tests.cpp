@@ -14,8 +14,8 @@ void weightsNumberTest()
     int outputLayerSize {2};
     std::string lossFunction = "None";
     NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, lossFunction);    
-    //expected number of weights is 33 : 4 + 4*3 + 3 + 3*2 + 2 + 2*2 + 2 = 33
-    unsigned int expectednWeights = 33;
+    //expected number of weights is 29 : 4*3 + 3 + 3*2 + 2 + 2*2 + 2 = 33
+    unsigned int expectednWeights = 29;
     unsigned int nWeights = nn.getnWeights();
     
     assert(expectednWeights == nWeights);
@@ -29,7 +29,7 @@ void getWeightsTest()
     std::string lossFunction = "None";
     NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, lossFunction);    
 
-    std::vector<double> expectedWeights = {0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1};
+    std::vector<double> expectedWeights = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1};
     std::vector<double> weights = nn.getWeights();
     assert(expectedWeights == weights);
 }
@@ -42,7 +42,7 @@ void setWeightsTest()
     std::string lossFunction = "None";
     NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, lossFunction);    
 
-    std::vector<double> expectedWeights = {0.5, 0.25, -0.25, -1, 1, 0.5, 1.5, 1.5, 0, 8, -5, 0, 1, 3, 0, 1, 1};
+    std::vector<double> expectedWeights = {-0.25, -1, 1, 0.5, 1.5, 1.5, 0, 8, -5, 0, 1, 3, 0, 1, 1};
     nn.setWeights(expectedWeights);
     std::vector<double> weights = nn.getWeights();
     
@@ -104,7 +104,7 @@ void backwardPropagationTest()
     nn.backwardPropagation();
 
     //assert(std::abs(output - expectedOutput) < 1e-7);
-    std::vector<double> weights = nn.getWeights();
+    std::vector<double> weights = nn.getDeltas();
     
     for(int weightIndex = 0; weightIndex < weights.size(); weightIndex++){
         std::cout << weights[weightIndex]<< " ; ";

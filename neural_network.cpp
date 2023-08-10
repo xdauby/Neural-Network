@@ -28,11 +28,18 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
             activationType = "sigmoid";
             layerSize = hiddenLayerSizes[layerIndex - 1];
         }
+        
 
         for(int nodeIndex {0}; nodeIndex <  layerSize; nodeIndex++){
             Node *node = new Node(nodeType, activationType);
             layers[layerIndex].push_back(*node);
-            nWeights++;
+            
+            //bias for layer 0 is set to 0 and not expected to change : we ignore 
+            //those weights and start counting weights from layer 1
+            if(layerIndex > 0){
+                nWeights++;
+            }
+            
         }
 
     }
@@ -102,7 +109,8 @@ void NeuralNetwork::setWeights(std::vector<double> values)
     }
 
     int cpt = 0;
-    for(unsigned int nodeLayer {0}; nodeLayer < layers.size(); nodeLayer++){
+    //bias for layer 0 is fixed to 0 and not expected to change : we ignore those weights and start from layer 1
+    for(unsigned int nodeLayer {1}; nodeLayer < layers.size(); nodeLayer++){
         for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
             double currentBias = values[cpt];
             layers[nodeLayer][nodeIndex].setBias(currentBias);
@@ -132,7 +140,8 @@ std::vector<double> NeuralNetwork::getOutputValues()
 std::vector<double> NeuralNetwork::getWeights()
 {
     std::vector<double> weights;
-    for(unsigned int nodeLayer {0}; nodeLayer < layers.size(); nodeLayer++){
+    //bias for layer 0 is fixed to 0 and not expected to change : we ignore those weights and start from layer 1
+    for(unsigned int nodeLayer {1}; nodeLayer < layers.size(); nodeLayer++){
         for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
             std::vector<double> nodeWeights = layers[nodeLayer][nodeIndex].getIncomingWeights();
             for(unsigned int weightIndex {0}; weightIndex < nodeWeights.size(); weightIndex++){
@@ -146,7 +155,9 @@ std::vector<double> NeuralNetwork::getWeights()
 std::vector<double> NeuralNetwork::getDeltas()
 {
     std::vector<double> deltas;
-    for(unsigned int nodeLayer {0}; nodeLayer < layers.size(); nodeLayer++){
+    //bias for layer 0 is set to 0 : we ignore those weights and start from layer 1, therefore we do not
+    //update biasDelta from layer 0
+    for(unsigned int nodeLayer {1}; nodeLayer < layers.size(); nodeLayer++){
         for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
             std::vector<double> nodeDeltas = layers[nodeLayer][nodeIndex].getIncomingDeltas();
             for(unsigned int deltaIndex {0}; deltaIndex < nodeDeltas.size(); deltaIndex++){
@@ -164,7 +175,7 @@ unsigned int NeuralNetwork::getnWeights()
 
 void NeuralNetwork::backwardPropagation()
 {
-    for(int nodeLayer = layers.size() - 1; nodeLayer >= 0; nodeLayer--){
+    for(int nodeLayer = layers.size() - 1; nodeLayer >= 1; nodeLayer--){
         for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
             layers[nodeLayer][nodeIndex].backwardPropagation();
         }
