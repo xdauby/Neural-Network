@@ -31,7 +31,7 @@ void weightsNumberTest()
     std::vector<int> hiddenLayerSizes {3,2};
     int outputLayerSize {2};
     std::string lossFunction = "None";
-    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "relu", "sigmoid", lossFunction);    
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "leakyrelu", "sigmoid", lossFunction);    
     //expected number of weights is 29 : 4*3 + 3 + 3*2 + 2 + 2*2 + 2 = 33
     unsigned int expectednWeights = 29;
     unsigned int nWeights = nn.getnWeights();
@@ -45,7 +45,7 @@ void getWeightsTest()
     std::vector<int> hiddenLayerSizes {2,2};
     int outputLayerSize {1};
     std::string lossFunction = "None";
-    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "relu", "sigmoid", lossFunction);    
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "leakyrelu", "sigmoid", lossFunction);    
 
     std::vector<double> expectedWeights = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1};
     std::vector<double> weights = nn.getWeights();
@@ -58,7 +58,7 @@ void setWeightsTest()
     std::vector<int> hiddenLayerSizes {2,2};
     int outputLayerSize {1};
     std::string lossFunction = "None";
-    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "relu", "sigmoid", lossFunction);    
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "leakyrelu", "sigmoid", lossFunction);    
 
     std::vector<double> expectedWeights = {-0.25, -1, 1, 0.5, 1.5, 1.5, 0, 8, -5, 0, 1, 3, 0, 1, 1};
     nn.setWeights(expectedWeights);
@@ -113,6 +113,7 @@ void backwardPropagationTest()
     int outputLayerSize {2};
     std::string lossFunction = "None";
 
+    //sigmoid was used in hidden layer just for the test
     NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "sigmoid", "sigmoid", lossFunction); 
     
     std::vector<double> inputData = {1.5, 0.5};
@@ -135,22 +136,23 @@ void backwardPropagationTestL2()
     int inputLayerSize {2};
     std::vector<int> hiddenLayerSizes {2};
     int outputLayerSize {2};
-    std::string lossFunction = "None";
+    std::string lossFunction = "L2 norm";
 
-    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "sigmoid", "sigmoid", lossFunction); 
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "leakyrelu", "linear", lossFunction); 
     
-    std::vector<double> inputData = {1.5, 0.5};
+    nn.setWeights(std::vector<double> {0,-1, 1, 0, 0.5, 0.5, 0, 1, 1, 0, 0.5, -0.5});
+
+    std::vector<double> inputData = {2, 1};
     std::vector<double> inputLabels = {2, 3};
-    std::vector<double> expectedDeltas = {0.0131349006, 0.0197023509, 0.006567450301, 
-                                          0.0131349006, 0.0197023509, 0.006567450301, 
-                                          0.1251019341, 0.110189418, 0.110189418, 
-                                          0.1251019341, 0.110189418, 0.110189418};    
-    
+    std::vector<double> expectedDeltas = {-0.015835, -0.0316699, -0.015835, 
+                                           0.357006, 0.714013, 0.357006,
+                                          -0.138196, 0.0034549, -0.207294,
+                                          -0.990405, 0.0247601, -1.4856074 };    
     nn.forwardPropagation(inputData, inputLabels);    
     nn.backwardPropagation();
-    std::vector<double> detlas = nn.getDeltas();
-    
-    assert(relativeError(detlas, expectedDeltas) < 1e-7);
+    std::vector<double> deltas = nn.getDeltas();
+
+    assert(relativeError(deltas, expectedDeltas) < 1e-6);
 }
 
 int main()
@@ -161,4 +163,5 @@ int main()
     forwardPropagationTest();
     forwardPropagationL2Test();
     backwardPropagationTest();
+    backwardPropagationTestL2();
 }

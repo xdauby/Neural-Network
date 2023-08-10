@@ -23,11 +23,11 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
             layerSize = inputLayerSize;
         } else if (layerIndex == (layers.size() - 1)) {
             nodeType = "output";
-            activationType = hiddenActivationType;
+            activationType = outputActivationType;
             layerSize = outputLayerSize;
         } else {
             nodeType = "hidden";
-            activationType = outputActivationType;
+            activationType = hiddenActivationType;
             layerSize = hiddenLayerSizes[layerIndex - 1];
         }
         

@@ -52,54 +52,57 @@ output value : 1.5
 ##### backwardPropagationL2Test #####
 #####################################
 
-//biases = 0, weights from edges = 1
-
-loss = 0.8534092045764366707566*
-
 Delta from 
 
-Node 2,1
-input value : 2*sig(2) = 1.761594156
-output value : sig(2*sig(2)) = 0.8534092045764366707566
-delta : sig(2*sig(2)) * (1 - sig(2*sig(2))) = 0.1251019341
+loss = sqrt( (2 - 1.475 )^2 + ( 3 - (-0.7625))^2 ) = 3.7989513
 
-biasDelta : ----> 0.1251019341
-weightsDelta Node 2,1 -> Node 1,0 : 0.1251019341 * 0.8807970779778824440597 = ----> 0.110189418
-weightsDelta Node 2,1 -> Node 1,1 : 0.1251019341 * 0.8807970779778824440597 = ----> 0.110189418
+delta to Node 2,1 : -(2 - 1.475)/3.7989513 = -0.1381960
+delta to Node 2,0 : -(3 - (-0.7625))/3.7989513 = -0.9904049
+
+
+Node 2,1
+input value : -0.7625
+output value : -0.7625
+delta : 1
+
+biasDelta : ----> 1 * -0.9904049 = -0.9904049 
+weightsDelta Node 2,1 -> Node 1,0 : -0.025 * -0.9904049 = ----> 0.02476012
+weightsDelta Node 2,1 -> Node 1,1 :  1.5 * -0.9904049 = ----> -1.4856074
 
 Node 2,0
-input value : 2*sig(2) = 1.761594156
-output value : sig(2*sig(2)) = 0.8534092045764366707566
-delta : sig(2*sig(2)) * (1 - sig(2*sig(2))) = 0.1251019341
+input value : 1.475
+output value : 1.475
+delta : 1
 
-biasDelta : ----> 0.1251019341
-weightsDelta Node 2,0 -> Node 1,0 : 0.1251019341 * 0.8807970779778824440597 = ----> 0.110189418
-weightsDelta Node 2,0 -> Node 1,1 : 0.1251019341 * 0.8807970779778824440597 = ----> 0.110189418
+biasDelta : ----> 1 * -0.1381960
+weightsDelta Node 2,0 -> Node 1,0 : -0.025 * -0.1381960 = ----> 0.0034549
+weightsDelta Node 2,0 -> Node 1,1 : 1.5 * -0.1381960 = ----> -0.207294
 
 Node 1,1
-input value : 2
-output value : sig(2) = 0.8807970779778824440597
-delta : sig(2) * (1 - sig(2)) = 0.1049935854
-
-biasDelta : 2*0.1049935854 * 0.1251019341 = ----> 0.0262698012
-weightsDelta Node 1,1 -> Node 0,0 : 2 * 0.1049935854 * 0.1251019341 * 1.5 = ----> 0.0394047018
-weightsDelta Node 1,1 -> Node 0,1 : 2 * 0.1049935854 * 0.1251019341 * 0.5 = ----> 0.0131349006
-Node 1,0
-input value : 2
-output value : sig(2) = 0.8807970779778824440597
-delta : sig(2) * (1 - sig(2)) = 0.1049935854
-
-biasDelta : 0.1049935854 * 0.1251019341 = ----> 0.0262698012
-weightsDelta Node 1,0 -> Node 0,0 : 0.1049935854 * 0.1251019341 * 1.5 = ---->  0.0394047018
-weightsDelta Node 1,0 -> Node 0,1 : 0.1049935854 * 0.1251019341 * 0.5 = ---->  0.0131349006
-
-Node 0,1
-input value : .5
-output value : .5
-
-Node 0,0
 input value : 1.5
 output value : 1.5
+delta : 1
+
+biasDelta : (-0.9904049 * -0.5 + -0.1381960 * 1) = ----> 0.357006
+weightsDelta Node 1,1 -> Node 0,0 : (-0.9904049*-0.5+-0.1381960)*2 = ----> 0.7140129
+weightsDelta Node 1,1 -> Node 0,1 : (-0.9904049*-0.5+-0.1381960)*1 = ----> 0.35700645
+
+Node 1,0
+input value : -1
+output value : -0.025
+delta : -0.025
+
+biasDelta : 0.025 * (-0.9904049 * 0.5 + -0.1381960 * 1)= ----> -0.01583495
+weightsDelta Node 1,0 -> Node 0,0 : 0.025*(-0.9904049*0.5+-0.1381960*1)*2 = ---->  -0.0316699225
+weightsDelta Node 1,0 -> Node 0,1 : 0.025*(-0.9904049*0.5+-0.1381960*1) = ---->  -0.01583496125
+
+Node 0,1
+input value : 1
+output value : 1
+
+Node 0,0
+input value : 2
+output value : 2
 
 
 

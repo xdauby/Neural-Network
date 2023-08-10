@@ -79,11 +79,11 @@ void Node::forwardPropagation()
         postActivationValue = preActivationValue;
     } else if (activationType == "sigmoid") {
         postActivationValue = std::exp(preActivationValue) / (1 + std::exp(preActivationValue));
-    } else if (activationType == "relu") {
+    } else if (activationType == "leakyrelu") {
         if(preActivationValue > 0){
             postActivationValue = preActivationValue;
         } else {
-            postActivationValue = 0;
+            postActivationValue = 0.025*preActivationValue;
         }
     }    
     
@@ -122,11 +122,11 @@ void Node::backwardPropagation()
         //delta *= 1; let's avoid useless computation
     } else if (activationType == "sigmoid") {
         delta *= postActivationValue * (1 - postActivationValue);
-    } else if (activationType == "relu") {
+    } else if (activationType == "leakyrelu") {
         if(preActivationValue > 0){
             //delta *= 1; let's avoid useless computation
         } else {
-            delta = 0;
+            delta *= 0.025;
         }
     }  
 
