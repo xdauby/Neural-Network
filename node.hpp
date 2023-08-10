@@ -29,7 +29,8 @@ class Node{
         void setPreActivationValue(double value);
         void setPostActivationValue(double value);
         void setBias(double value);
-        void setDelta(double value);       
+        void setDelta(double value);
+        void addDelta(double value);       
         double getPreActivationValue();
         double getPostActivationValue();
         std::vector<double> getIncomingWeights();

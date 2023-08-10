@@ -15,7 +15,13 @@ private:
     unsigned int nWeights;
 
 public:
-    NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSizes, int outputLayerSize, std::string lossFunction);
+    NeuralNetwork(int inputLayerSize, 
+                  std::vector<int> hiddenLayerSizes, 
+                  int outputLayerSize,
+                  std::string hiddenActivationType,
+                  std::string outputActivationType, 
+                  std::string lossFunction);
+                  
     void setWeights(std::vector<double> values);
     unsigned int getnWeights();
     std::vector<double> getWeights();

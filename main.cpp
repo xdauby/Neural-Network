@@ -15,7 +15,7 @@ int main()
     std::vector<double> inputData = {1.5, 0.5};
     std::vector<double> inputLabels = {1};
 
-    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, lossFunction);
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "sigmoid", "sigmoid", lossFunction);
     
     nn.forwardPropagation(inputData, inputLabels);
 

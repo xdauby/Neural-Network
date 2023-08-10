@@ -2,7 +2,7 @@
 #include "node.hpp"
 
 Edge::Edge(Node *incomingNode, Node *outgoingNode) : weight(1), 
-                                                     weightDelta(1), 
+                                                     weightDelta(0), 
                                                      incomingNode(incomingNode), 
                                                      outgoingNode(outgoingNode) 
 {
@@ -33,5 +33,5 @@ double Edge::getWeightDelta()
 void Edge::backwardPropagation(double delta)
 {
     weightDelta =  delta * incomingNode->getPostActivationValue();
-    incomingNode->setDelta(delta * weight);
+    incomingNode->addDelta(delta * weight);
 }

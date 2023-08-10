@@ -4,7 +4,9 @@
 
 NeuralNetwork::NeuralNetwork(int inputLayerSize, 
                              std::vector<int> hiddenLayerSizes, 
-                             int outputLayerSize, 
+                             int outputLayerSize,
+                             std::string hiddenActivationType,
+                             std::string outputActivationType,
                              std::string lossFunction) : lossFunction(lossFunction)
 {
     nWeights = 0;
@@ -21,11 +23,11 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
             layerSize = inputLayerSize;
         } else if (layerIndex == (layers.size() - 1)) {
             nodeType = "output";
-            activationType = "sigmoid";
+            activationType = hiddenActivationType;
             layerSize = outputLayerSize;
         } else {
             nodeType = "hidden";
-            activationType = "sigmoid";
+            activationType = outputActivationType;
             layerSize = hiddenLayerSizes[layerIndex - 1];
         }
         
@@ -78,7 +80,7 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
 
     //propagate forward
     for(unsigned int layerIndex {0}; layerIndex < layers.size(); layerIndex++){
-        for(unsigned int nodeIndex {0}; nodeIndex <  layers[layerIndex].size(); nodeIndex++){
+        for(unsigned int nodeIndex {0}; nodeIndex <  layers[layerIndex].size(); nodeIndex++){            
             layers[layerIndex][nodeIndex].forwardPropagation();
         }
     }
@@ -95,7 +97,11 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
         for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
             computedLoss += (outputValues[nodeIndex] - inputLabels[nodeIndex]) * (outputValues[nodeIndex] - inputLabels[nodeIndex]);
         }
-            computedLoss = std::sqrt(computedLoss);
+        computedLoss = std::sqrt(computedLoss);
+
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
+            layers[outputLayerIndex][nodeIndex].setDelta( (outputValues[nodeIndex] - inputLabels[nodeIndex]) / computedLoss ); 
+        }
     }
 
     return computedLoss;

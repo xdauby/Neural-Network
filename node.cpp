@@ -4,9 +4,9 @@
 
 Node::Node(std::string nodeType, std::string activationType) : preActivationValue(0), 
                                                                postActivationValue(0), 
-                                                               delta(1), 
+                                                               delta(0), 
                                                                bias(0), 
-                                                               biasDelta(1), 
+                                                               biasDelta(0), 
                                                                nodeType(nodeType), 
                                                                activationType(activationType)
 {
@@ -34,6 +34,10 @@ void Node::setDelta(double value)
     delta = value;
 }       
 
+void Node::addDelta(double value)
+{
+    delta += value;
+}
 
 double Node::getPreActivationValue()
 {
@@ -73,9 +77,14 @@ void Node::forwardPropagation()
     preActivationValue += bias;
     if (activationType == "linear") {
         postActivationValue = preActivationValue;
-
     } else if (activationType == "sigmoid") {
         postActivationValue = std::exp(preActivationValue) / (1 + std::exp(preActivationValue));
+    } else if (activationType == "relu") {
+        if(preActivationValue > 0){
+            postActivationValue = preActivationValue;
+        } else {
+            postActivationValue = 0;
+        }
     }    
     
     for(unsigned int edgeIndex {0}; edgeIndex < outgoingEdges.size(); edgeIndex++){
@@ -110,15 +119,21 @@ std::vector<double> Node::getIncomingDeltas()
 void Node::backwardPropagation()
 {
     if (activationType == "linear") {
-        delta *= 1;
+        //delta *= 1; let's avoid useless computation
     } else if (activationType == "sigmoid") {
         delta *= postActivationValue * (1 - postActivationValue);
-    }
+    } else if (activationType == "relu") {
+        if(preActivationValue > 0){
+            //delta *= 1; let's avoid useless computation
+        } else {
+            delta = 0;
+        }
+    }  
 
     biasDelta = delta;
 
     for(unsigned int edgeIndex {0}; edgeIndex < incomingEdges.size(); edgeIndex++){
-        incomingEdges[edgeIndex]->backwardPropagation(delta);//
+        incomingEdges[edgeIndex]->backwardPropagation(delta);
     }
 
 }
