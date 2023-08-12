@@ -6,6 +6,7 @@
 #include "neural_network.hpp"
 #include "edge.hpp"
 #include "node.hpp"
+#include "data_set.hpp"
 
 double relativeError(std::vector<double> x_hat, std::vector<double> x)
 {
@@ -155,6 +156,25 @@ void backwardPropagationTestL2()
     assert(relativeError(deltas, expectedDeltas) < 1e-6);
 }
 
+void importDataSetTest(){
+    DataSet dataSetTest("dataset_data_test.csv", "dataset_labels_test.csv");
+    std::vector<std::vector<double>> inputData = dataSetTest.getInputData();
+    std::vector<std::vector<double>> inputLabels = dataSetTest.getInputLabels();
+
+    std::vector<std::vector<double>> expectedInputData = {{1,2.1,2},
+                                                          {3,1,2},
+                                                          {1,0,0},
+                                                          {10.2,9,8}};
+
+
+    std::vector<std::vector<double>> expectedInputLabels = {{1},
+                                                            {2},
+                                                            {0},
+                                                            {1}};
+    assert(inputData == expectedInputData);
+    assert(inputLabels == expectedInputLabels);
+}
+
 int main()
 {
     weightsNumberTest();
@@ -164,4 +184,6 @@ int main()
     forwardPropagationL2Test();
     backwardPropagationTest();
     backwardPropagationTestL2();
+
+    importDataSetTest();
 }
