@@ -15,6 +15,11 @@ void Edge::setWeight(double value)
     weight = value;
 }
 
+void Edge::setWeightDelta(double value)
+{
+    weightDelta = value;
+}
+
 void Edge::forwardPropagation(double value)
 {
     outgoingNode->addToPreActivationValue(value * weight);

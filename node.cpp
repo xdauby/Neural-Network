@@ -39,6 +39,18 @@ void Node::addDelta(double value)
     delta += value;
 }
 
+void Node::reset(){
+    preActivationValue = 0;
+    postActivationValue = 0;
+    delta = 0;
+    biasDelta = 0;
+
+    for(unsigned int edgeIndex {0}; edgeIndex < incomingEdges.size(); edgeIndex++){
+        incomingEdges[edgeIndex]->setWeightDelta(0);
+    }
+
+    }
+
 double Node::getPreActivationValue()
 {
     return preActivationValue;

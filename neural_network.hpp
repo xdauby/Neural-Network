@@ -21,8 +21,9 @@ public:
                   std::string hiddenActivationType,
                   std::string outputActivationType, 
                   std::string lossFunction);
-                  
+
     void setWeights(std::vector<double> values);
+    void reset();
     unsigned int getnWeights();
     std::vector<double> getWeights();
     std::vector<double> getDeltas();

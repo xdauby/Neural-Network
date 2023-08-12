@@ -131,6 +131,14 @@ void NeuralNetwork::setWeights(std::vector<double> values)
     }
 }
 
+void NeuralNetwork::reset()
+{
+    for(unsigned int layerIndex {0}; layerIndex < layers.size(); layerIndex++){
+        for(unsigned int nodeIndex {0}; nodeIndex <  layers[layerIndex].size(); nodeIndex++){            
+            layers[layerIndex][nodeIndex].reset();
+        }
+    }
+}
 
 std::vector<double> NeuralNetwork::getOutputValues()
 {
