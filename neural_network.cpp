@@ -198,11 +198,29 @@ void NeuralNetwork::backwardPropagation()
 
 void NeuralNetwork::train(DataSet dataSet, int epochs, double learningRate)
 {
+    unsigned int nRows = dataSet.getnRows();
+    
     for(int epochNumber = 0; epochNumber < epochs; epochNumber++){
+        
         dataSet.shuffle();
-        
-        
-    }
+        std::vector<double> weights = getWeights();
+        std::vector<std::vector<double>> inputData = dataSet.getInputData();
+        std::vector<std::vector<double>> inputLabels = dataSet.getInputLabels();  
 
-    //double error = forwardPropagation();
+        for(unsigned int rowNumber = 0; rowNumber < nRows; rowNumber++){
+            forwardPropagation(inputData[rowNumber], inputLabels[rowNumber]);
+            backwardPropagation();
+            std::vector<double> gradient = getDeltas();
+            for(unsigned int weightNumber = 0; weightNumber < weights.size(); weightNumber++){
+                weights[weightNumber] -= learningRate*gradient[weightNumber];
+            }
+            setWeights(weights);
+        }
+
+        double sumLoss = 0;
+        for(unsigned int rowNumber = 0; rowNumber < nRows; rowNumber++){
+            sumLoss += forwardPropagation(inputData[rowNumber], inputLabels[rowNumber]);
+        }
+
+    }
 }
