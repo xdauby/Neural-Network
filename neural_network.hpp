@@ -5,7 +5,7 @@
 #include <vector> 
 #include "node.hpp"
 #include "edge.hpp"
-
+#include "data_set.hpp"
 
 class NeuralNetwork{
 
@@ -30,6 +30,7 @@ public:
     std::vector<double> getOutputValues();
     double forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels);
     void backwardPropagation();
+    void train(DataSet dataSet, int epochs, double learningRate);
 };
 
 

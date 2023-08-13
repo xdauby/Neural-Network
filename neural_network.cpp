@@ -195,3 +195,14 @@ void NeuralNetwork::backwardPropagation()
         }
     }
 }
+
+void NeuralNetwork::train(DataSet dataSet, int epochs, double learningRate)
+{
+    for(int epochNumber = 0; epochNumber < epochs; epochNumber++){
+        dataSet.shuffle();
+        
+        
+    }
+
+    //double error = forwardPropagation();
+}

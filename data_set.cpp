@@ -20,6 +20,11 @@ std::vector< std::vector <double>> DataSet::getInputLabels()
     return inputLabels;
 }
 
+unsigned int DataSet::getnRows()
+{
+    return inputData.size();
+}
+
 void DataSet::shuffle()
 {
     unsigned int seed = unsigned(std::time(0));

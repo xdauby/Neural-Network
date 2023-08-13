@@ -13,6 +13,7 @@ class DataSet{
         DataSet(std::string dataFilePath, std::string labelsFilePath);
         std::vector< std::vector <double>> getInputData();
         std::vector< std::vector <double>> getInputLabels();
+        unsigned int getnRows();
         void importCsv(std::string filePath, std::vector< std::vector <double>> &matrix);
         void shuffle();
 };
