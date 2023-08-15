@@ -253,43 +253,43 @@ std::vector<double> NeuralNetwork::getNumericGradient(std::vector<double> inputD
 }
 
 
-void NeuralNetwork::train(DataSet dataSet, int epochs, double learningRate)
+void NeuralNetwork::train(DataSet dataset, int epochs, double learningRate, double mu)
 {
-    unsigned int nRows = dataSet.getnRows();
-    
+    unsigned int nRows = dataset.getnRows();
+    std::vector<double> velocity(nWeights, 0.0);
+
     for(int epochNumber = 0; epochNumber < epochs; epochNumber++){
         
-        dataSet.shuffle();
+        dataset.shuffle();
 
-       
-
-        std::vector<std::vector<double>> inputData = dataSet.getInputData();
-        std::vector<std::vector<double>> inputLabels = dataSet.getInputLabels();  
-
-        //  std::cout<< "wei ------ : "<<std::endl;
-        //     for(unsigned int weightNumber = 0; weightNumber < inputLabels.size(); weightNumber++){
-        //             std::cout << inputData[weightNumber][1] << ";";
-        //         }
-        //         std::cout<< std::endl;
+        std::vector<std::vector<double>> inputData = dataset.getInputData();
+        std::vector<std::vector<double>> inputLabels = dataset.getInputLabels();  
 
         for(unsigned int rowNumber = 1; rowNumber < nRows; rowNumber++){
+            
+            std::vector<double> previousVelocity = velocity;
+
             forwardPropagation(inputData[rowNumber], inputLabels[rowNumber]);
             backwardPropagation();
             std::vector<double> weights = getWeights();
             std::vector<double> gradient = getDeltas();
             for(unsigned int weightNumber = 0; weightNumber < weights.size(); weightNumber++){
-                weights[weightNumber] -= learningRate*gradient[weightNumber];
+                velocity[weightNumber] = mu*velocity[weightNumber] - learningRate*gradient[weightNumber]; 
+                weights[weightNumber] += (-mu*previousVelocity[weightNumber]) + ((1+mu)*velocity[weightNumber]);
             }
             setWeights(weights);
         }
         
-
         double error = 0;
         for(unsigned int rowNumber = 0; rowNumber < nRows; rowNumber++){
             error += forwardPropagation(inputData[rowNumber], inputLabels[rowNumber]);
         }
-        double accuracy = getAccuracy(dataSet);
-        std::cout << "Loss :" << error/nRows << "; Accuracy : "<<accuracy <<std::endl; 
+
+        if (dataset.getType() == "classification") {
+            std::cout << "Epoch : "<< epochNumber << ", Loss over training set :" << error/nRows << ", Accuracy over training set : "<< getAccuracy(dataset) <<std::endl;
+        } else {
+            std::cout << "Epoch : "<< epochNumber << ", Loss :" << error/nRows << std::endl;
+        }
 
     }
 }

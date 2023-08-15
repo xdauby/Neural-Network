@@ -5,13 +5,13 @@ import pandas as pd
 
 def generate_regression_dataset(n : int = 100, 
                                 start_range : float = -2.5, 
-                                end_range : float = -2.5,
+                                end_range : float = 2.5,
                                 data_path : str = './src/datasets/regression_data.csv',
                                 labels_path : str = './src/datasets/regression_labels.csv') -> None:
     #Simulate regression Y = 2 + X + 2*X^2
     step = 5/n
     X = np.arange(start_range, end_range, step)
-    Y = 2 + 2*X*X + np.random.normal(0,0.5, size = n)
+    Y = 2 + 2*X*X + np.random.normal(0,0.05, size = n)
 
     df_labels = pd.DataFrame(np.array([Y]).T)
     df_data = pd.DataFrame(np.array([np.ones(n), X, X*X]).T)
@@ -75,6 +75,6 @@ def generate_XO_dataset(n : int = 200,
 
     df_labels.to_csv(labels_path, index=False, header=False)
     df_data.to_csv(data_path, index=False, header=False)
-    
-        
+
+generate_regression_dataset()    
 generate_XO_dataset()

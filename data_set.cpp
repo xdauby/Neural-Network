@@ -6,7 +6,8 @@
 #include <algorithm>
 #include <random>
 
-DataSet::DataSet(std::string dataFilePath, std::string labelsFilePath){
+DataSet::DataSet(std::string dataFilePath, std::string labelsFilePath, std::string datasetType): datasetType(datasetType)
+{
    importCsv(dataFilePath, inputData);
    importCsv(labelsFilePath, inputLabels);
 }
@@ -23,6 +24,10 @@ std::vector< std::vector <double>> DataSet::getInputLabels()
 unsigned int DataSet::getnRows()
 {
     return inputData.size();
+}
+std::string DataSet::getType()
+{
+    return datasetType;
 }
 
 void DataSet::shuffle()

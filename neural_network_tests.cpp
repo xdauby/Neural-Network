@@ -224,7 +224,7 @@ void backwardPropagationTestSoftmax()
 }
 
 void importDataSetTest(){
-    DataSet dataSetTest("dataset_data_test.csv", "dataset_labels_test.csv");
+    DataSet dataSetTest("dataset_data_test.csv", "dataset_labels_test.csv", "classification");
     std::vector<std::vector<double>> inputData = dataSetTest.getInputData();
     std::vector<std::vector<double>> inputLabels = dataSetTest.getInputLabels();
 
