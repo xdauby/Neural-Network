@@ -63,7 +63,7 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
 double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels)
 {
     reset();
-    double outputLayerIndex = layers.size() - 1;
+    int outputLayerIndex = layers.size() - 1;
 
     if (inputData.size() != layers[0].size()){
         throw std::invalid_argument("inputData size different from number of input Nodes !");
@@ -102,6 +102,24 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
         for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++){
             layers[outputLayerIndex][nodeIndex].setDelta( (outputValues[nodeIndex] - inputLabels[nodeIndex]) / computedLoss ); 
         }
+    } else if (lossFunction == "Softmax") {
+        
+        double sumExp = 0.0;
+        unsigned int label = int(inputLabels[0]);
+
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++) {
+            sumExp += std::exp(outputValues[nodeIndex]);
+        }
+
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++) {
+            if(label != nodeIndex){
+                layers[outputLayerIndex][nodeIndex].setDelta( std::exp(outputValues[nodeIndex])/sumExp );
+            } else {
+                layers[outputLayerIndex][nodeIndex].setDelta( (std::exp(outputValues[nodeIndex])/sumExp) - 1 );
+                computedLoss = -std::log( std::exp(outputValues[nodeIndex])/sumExp );
+            } 
+        }
+
     }
 
     return computedLoss;
