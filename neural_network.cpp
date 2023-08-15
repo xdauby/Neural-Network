@@ -205,6 +205,35 @@ void NeuralNetwork::backwardPropagation()
     }
 }
 
+std::vector<double> NeuralNetwork::getNumericGradient(std::vector<double> inputData, std::vector<double> inputLabels){
+    std::vector<double> gradient;
+    std::vector<double> weights = getWeights();
+    std::vector<double> weightsCopy = weights;
+
+    double lossLeft;
+    double lossRight;
+
+    for(unsigned int weightNumber = 0; weightNumber < weights.size(); weightNumber++){
+        
+        weightsCopy[weightNumber] = weights[weightNumber] - 0.000000001;
+        setWeights(weightsCopy);
+        lossLeft = forwardPropagation(inputData, inputLabels);
+
+        weightsCopy[weightNumber] = weights[weightNumber] + 0.000000001;
+        setWeights(weightsCopy);
+        lossRight = forwardPropagation(inputData, inputLabels);
+        
+        gradient.push_back((lossRight - lossLeft) / (2.0 * 0.000000001));
+
+        weightsCopy[weightNumber] = weights[weightNumber];
+
+    }
+    setWeights(weights);
+    return gradient;
+
+}
+
+
 void NeuralNetwork::train(DataSet dataSet, int epochs, double learningRate)
 {
     unsigned int nRows = dataSet.getnRows();
@@ -244,3 +273,4 @@ void NeuralNetwork::train(DataSet dataSet, int epochs, double learningRate)
 
     }
 }
+

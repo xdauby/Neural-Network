@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 
 #Simulate regression Y = 2 + X + 2*X^2
-n = 50
-step = 5/50
+n = 100
+step = 5/n
 X = np.arange(-2.5, 2.5, step)
-Y = 2 + 2*X*X + np.random.normal(0,1, size = n)
+Y = 2 + 2*X*X + np.random.normal(0,0.5, size = n)
 
 df_labels = pd.DataFrame(np.array([Y]).T)
 df_data = pd.DataFrame(np.array([np.ones(n), X, X*X]).T)

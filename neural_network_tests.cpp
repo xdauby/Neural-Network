@@ -106,6 +106,49 @@ void forwardPropagationL2Test()
 
 }
 
+void numericGradientTest1()
+{
+    int inputLayerSize {2};
+    std::vector<int> hiddenLayerSizes {2};
+    int outputLayerSize {2};
+    std::string lossFunction = "None";
+
+    //sigmoid was used in hidden layer just for the test
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "sigmoid", "sigmoid", lossFunction); 
+    
+    std::vector<double> inputData = {1.5, 0.5};
+    std::vector<double> inputLabels = {2, 2};
+    std::vector<double> expectedGradient = {0.0262698012, 0.0394047018, 0.0131349006, 
+                                          0.0262698012, 0.0394047018, 0.0131349006, 
+                                          0.1251019341, 0.110189418, 0.110189418, 
+                                          0.1251019341, 0.110189418, 0.110189418};    
+    
+    std::vector<double> gradient = nn.getNumericGradient(inputData, inputLabels);
+    assert(relativeError(gradient, expectedGradient) < 1e-6);
+}
+
+void numericGradientTest2()
+{
+    int inputLayerSize {2};
+    std::vector<int> hiddenLayerSizes {2};
+    int outputLayerSize {2};
+    std::string lossFunction = "L2 norm";
+
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "leakyrelu", "linear", lossFunction); 
+    
+    nn.setWeights(std::vector<double> {0,-1, 1, 0, 0.5, 0.5, 0, 1, 1, 0, 0.5, -0.5});
+
+    std::vector<double> inputData = {2, 1};
+    std::vector<double> inputLabels = {2, 3};
+    std::vector<double> expectedGradient = {-0.015835, -0.0316699, -0.015835, 
+                                           0.357006, 0.714013, 0.357006,
+                                          -0.138196, 0.0034549, -0.207294,
+                                          -0.990405, 0.0247601, -1.4856074 };    
+   
+    std::vector<double> gradient = nn.getNumericGradient(inputData, inputLabels);
+    assert(relativeError(gradient, expectedGradient) < 1e-6);
+}
+
 void backwardPropagationTest()
 {
 
@@ -117,18 +160,19 @@ void backwardPropagationTest()
     //sigmoid was used in hidden layer just for the test
     NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "sigmoid", "sigmoid", lossFunction); 
     
-    std::vector<double> inputData = {1.5, 0.5};
-    std::vector<double> inputLabels = {2, 2};
-    std::vector<double> expectedDeltas = {0.0262698012, 0.0394047018, 0.0131349006, 
-                                          0.0262698012, 0.0394047018, 0.0131349006, 
-                                          0.1251019341, 0.110189418, 0.110189418, 
-                                          0.1251019341, 0.110189418, 0.110189418};    
-    
+    std::vector<double> inputData = {0.096, 0.5};
+    std::vector<double> inputLabels = {6, 2};
+
     nn.forwardPropagation(inputData, inputLabels);    
     nn.backwardPropagation();
-    std::vector<double> detlas = nn.getDeltas();
-    
-    assert(relativeError(detlas, expectedDeltas) < 1e-7);
+    std::vector<double> deltas = nn.getDeltas();
+    std::vector<double> gradient = nn.getNumericGradient(inputData, inputLabels);
+
+    assert(relativeError(deltas, gradient) < 1e-6);
+
+    for(int i = 0; i<deltas.size(); i++){
+        std::cout<<"From backprop : "<<deltas[i] <<"; From gradient :" << gradient[i]<<std::endl;
+    }
 }
 
 void backwardPropagationTestL2()
@@ -143,17 +187,16 @@ void backwardPropagationTestL2()
     
     nn.setWeights(std::vector<double> {0,-1, 1, 0, 0.5, 0.5, 0, 1, 1, 0, 0.5, -0.5});
 
-    std::vector<double> inputData = {2, 1};
+    std::vector<double> inputData = {2.5, -1};
     std::vector<double> inputLabels = {2, 3};
-    std::vector<double> expectedDeltas = {-0.015835, -0.0316699, -0.015835, 
-                                           0.357006, 0.714013, 0.357006,
-                                          -0.138196, 0.0034549, -0.207294,
-                                          -0.990405, 0.0247601, -1.4856074 };    
+   
     nn.forwardPropagation(inputData, inputLabels);    
     nn.backwardPropagation();
     std::vector<double> deltas = nn.getDeltas();
+    std::vector<double> gradient = nn.getNumericGradient(inputData, inputLabels);
 
-    assert(relativeError(deltas, expectedDeltas) < 1e-6);
+    assert(relativeError(deltas, gradient) < 1e-6);
+
 }
 
 void importDataSetTest(){
@@ -182,6 +225,8 @@ int main()
     setWeightsTest();
     forwardPropagationTest();
     forwardPropagationL2Test();
+    numericGradientTest1();
+    numericGradientTest2();
     backwardPropagationTest();
     backwardPropagationTestL2();
 

@@ -31,7 +31,9 @@ public:
     void randomInitialization(double bias);
     double forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels);
     void backwardPropagation();
+    std::vector<double> getNumericGradient(std::vector<double> inputData, std::vector<double> inputLabels);
     void train(DataSet dataSet, int epochs, double learningRate);
+    
 };
 
 
