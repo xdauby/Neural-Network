@@ -1,6 +1,7 @@
 #include "neural_network.hpp"
 #include <stdexcept>
 #include <cmath>
+#include <algorithm>
 
 NeuralNetwork::NeuralNetwork(int inputLayerSize, 
                              std::vector<int> hiddenLayerSizes, 
@@ -69,9 +70,9 @@ double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::ve
         throw std::invalid_argument("inputData size different from number of input Nodes !");
     }
 
-    if (inputLabels.size() != layers[outputLayerIndex].size()){
-        throw std::invalid_argument("inputLabels size different from number of output Nodes !");
-    }
+    // if (inputLabels.size() != layers[outputLayerIndex].size()){
+    //     throw std::invalid_argument("inputLabels size different from number of output Nodes !");
+    // }
 
     //initialize input nodes
     for(unsigned int nodeIndex {0}; nodeIndex<layers[0].size(); nodeIndex++){
@@ -287,8 +288,31 @@ void NeuralNetwork::train(DataSet dataSet, int epochs, double learningRate)
         for(unsigned int rowNumber = 0; rowNumber < nRows; rowNumber++){
             error += forwardPropagation(inputData[rowNumber], inputLabels[rowNumber]);
         }
-        std::cout << "Loss :" << error/nRows << std::endl; 
+        double accuracy = getAccuracy(dataSet);
+        std::cout << "Loss :" << error/nRows << "; Accuracy : "<<accuracy <<std::endl; 
 
     }
 }
 
+double NeuralNetwork::getAccuracy(DataSet dataset)
+{
+    std::vector<std::vector<double>> inputData = dataset.getInputData();
+    std::vector<std::vector<double>> inputLabels = dataset.getInputLabels();
+    int nRows = dataset.getnRows();
+
+    unsigned int trueLabels = 0;
+
+    for(unsigned int currentRow = 0; currentRow< nRows; currentRow++) {
+        forwardPropagation(inputData[currentRow], inputLabels[currentRow]);
+        std::vector<double> outputValues = getOutputValues();
+        std::vector<double>::iterator max = std::max_element(outputValues.begin(), outputValues.end()); 
+        unsigned int predictedLabel = std::distance(outputValues.begin(), max); 
+
+        if(predictedLabel == int(inputLabels[currentRow][0])) {
+            trueLabels += 1;
+        }
+    }
+    
+    return (double)trueLabels/nRows;
+
+}

@@ -1,1 +1,1 @@
-all: ; g++ -std=c++11 -Wall -o test neural_network_tests.cpp node.hpp node.cpp edge.hpp edge.cpp neural_network.cpp neural_network.hpp data_set.cpp data_set.hpp
+all: ; g++ -std=c++11 -Wall -o main main.cpp node.hpp node.cpp edge.hpp edge.cpp neural_network.cpp neural_network.hpp data_set.cpp data_set.hpp

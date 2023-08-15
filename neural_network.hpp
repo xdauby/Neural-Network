@@ -33,6 +33,7 @@ public:
     void backwardPropagation();
     std::vector<double> getNumericGradient(std::vector<double> inputData, std::vector<double> inputLabels);
     void train(DataSet dataSet, int epochs, double learningRate);
+    double getAccuracy(DataSet dataset);
     
 };
 

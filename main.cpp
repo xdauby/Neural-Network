@@ -9,19 +9,21 @@
 
 int main()
 {
-    DataSet trainingSet("./src/datasets/regression_data.csv","./src/datasets/regression_labels.csv");
-    NeuralNetwork nn({3}, {50,50,10,10}, {1}, "leakyrelu", "linear", "L2 norm");
+    DataSet trainingSet("./src/datasets/classification_data.csv","./src/datasets/classification_labels.csv");
+    trainingSet.shuffle();
+    NeuralNetwork nn({100}, {8,8,8}, {2}, "leakyrelu", "sigmoid", "Softmax");
     nn.randomInitialization(0);
-    nn.train(trainingSet, 10000, 0.0001);
+    nn.train(trainingSet, 100, 0.01);
 
-    std::vector<std::vector<double>> inputData = trainingSet.getInputData();
-    std::vector<std::vector<double>> inputLabels =  trainingSet.getInputLabels();
+    DataSet trainingSet2("./src/datasets/classification_data.csv","./src/datasets/classification_labels.csv");
+    std::vector<std::vector<double>> inputData = trainingSet2.getInputData();
+    std::vector<std::vector<double>> inputLabels =  trainingSet2.getInputLabels();
     std::vector<double> predictions;
 
     for(unsigned int rowNumber = 0; rowNumber < inputData.size(); rowNumber++){
         nn.forwardPropagation(inputData[rowNumber],inputLabels[rowNumber]);
         std::vector<double> predicted = nn.getOutputValues();
-        std::cout<<predicted[0]<<std::endl;
+        std::cout<< " proba 0 : "<<predicted[0]<< " proba 1 : " << predicted[1] <<std::endl;
 
     }
     

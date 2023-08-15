@@ -169,10 +169,6 @@ void backwardPropagationTest()
     std::vector<double> gradient = nn.getNumericGradient(inputData, inputLabels);
 
     assert(relativeError(deltas, gradient) < 1e-6);
-
-    for(int i = 0; i<deltas.size(); i++){
-        std::cout<<"From backprop : "<<deltas[i] <<"; From gradient :" << gradient[i]<<std::endl;
-    }
 }
 
 void backwardPropagationTestL2()
@@ -196,6 +192,34 @@ void backwardPropagationTestL2()
     std::vector<double> gradient = nn.getNumericGradient(inputData, inputLabels);
 
     assert(relativeError(deltas, gradient) < 1e-6);
+
+}
+
+void backwardPropagationTestSoftmax()
+{
+
+    int inputLayerSize {2};
+    std::vector<int> hiddenLayerSizes {2};
+    int outputLayerSize {2};
+    std::string lossFunction = "Softmax";
+
+    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "leakyrelu", "linear", lossFunction); 
+    
+    nn.setWeights(std::vector<double> {0,-1, 1, 0, 0.5, 0.5, 0, 1, 1, 0, 0.5, -0.5});
+
+    std::vector<double> inputData = {2.5, -1};
+    std::vector<double> inputLabels = {1};
+   
+    nn.forwardPropagation(inputData, inputLabels);    
+    nn.backwardPropagation();
+    std::vector<double> deltas = nn.getDeltas();
+    std::vector<double> gradient = nn.getNumericGradient(inputData, inputLabels);
+
+    assert(relativeError(deltas, gradient) < 1e-6);
+
+    for(int i = 0; i<deltas.size(); i++){
+        std::cout<<"From backprop : "<<deltas[i] <<"; From gradient :" << gradient[i]<<std::endl;
+    }
 
 }
 
@@ -229,6 +253,7 @@ int main()
     numericGradientTest2();
     backwardPropagationTest();
     backwardPropagationTestL2();
+    backwardPropagationTestSoftmax();
 
     importDataSetTest();
 }
