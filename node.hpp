@@ -40,6 +40,7 @@ class Node{
         void addToPreActivationValue(double value);
         void addIncomingEgde(Edge *edge);
         void addOutgoingEgde(Edge *edge);
+        void randomInitialization(double bias);
         void forwardPropagation();
         void backwardPropagation();
 

@@ -1,6 +1,7 @@
 #include "node.hpp"
 #include "edge.hpp"
-#include <cmath>
+#include <iostream>
+#include <random>
 
 Node::Node(std::string nodeType, std::string activationType) : preActivationValue(0), 
                                                                postActivationValue(0), 
@@ -127,6 +128,16 @@ std::vector<double> Node::getIncomingDeltas()
     return incomingDeltas;
 }
 
+void Node::randomInitialization(double bias)
+{
+    std::default_random_engine generator;
+    std::normal_distribution<double> random_gaussian{0.0, 1.0};
+
+    this->bias = bias;
+    for(unsigned int edgeIndex {0}; edgeIndex < incomingEdges.size(); edgeIndex++){
+        incomingEdges[edgeIndex]->setWeight(random_gaussian(generator) / std::sqrt(incomingEdges.size()));
+    }
+}
 
 void Node::backwardPropagation()
 {

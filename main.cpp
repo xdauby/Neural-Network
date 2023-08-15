@@ -2,22 +2,16 @@
 #include "neural_network.hpp"
 #include "edge.hpp"
 #include "node.hpp"
-
+#include "data_set.hpp"
+#include <algorithm>
+#include <random>
+#include <iomanip>
 
 int main()
 {
-
-    int inputLayerSize {2};
-    std::vector<int> hiddenLayerSizes {2};
-    int outputLayerSize {1};
-
-    std::string lossFunction = "None";
-    std::vector<double> inputData = {1.5, 0.5};
-    std::vector<double> inputLabels = {1};
-
-    NeuralNetwork nn(inputLayerSize, hiddenLayerSizes, outputLayerSize, "leakyrelu", "sigmoid", lossFunction);
-    
-    nn.forwardPropagation(inputData, inputLabels);
-
+    DataSet trainingSet("./src/datasets/regression_data.csv","./src/datasets/regression_labels.csv");
+    NeuralNetwork nn({3}, {4,4,4,4}, {1}, "leakyrelu", "linear", "L2 norm");
+    nn.randomInitialization(0);
+    nn.train(trainingSet, 1000, 0.001);
 
 }

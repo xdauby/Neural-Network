@@ -28,6 +28,7 @@ public:
     std::vector<double> getWeights();
     std::vector<double> getDeltas();
     std::vector<double> getOutputValues();
+    void randomInitialization(double bias);
     double forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels);
     void backwardPropagation();
     void train(DataSet dataSet, int epochs, double learningRate);

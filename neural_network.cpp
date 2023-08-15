@@ -62,7 +62,7 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize,
 
 double  NeuralNetwork::forwardPropagation(std::vector<double> inputData, std::vector<double> inputLabels)
 {
-
+    reset();
     double outputLayerIndex = layers.size() - 1;
 
     if (inputData.size() != layers[0].size()){
@@ -187,6 +187,15 @@ unsigned int NeuralNetwork::getnWeights()
     return nWeights;
 }
 
+void NeuralNetwork::randomInitialization(double bias){
+    for(unsigned int nodeLayer {1}; nodeLayer < layers.size(); nodeLayer++){
+        for(unsigned int nodeIndex {0}; nodeIndex < layers[nodeLayer].size(); nodeIndex++){
+            layers[nodeLayer][nodeIndex].randomInitialization(bias);
+        }
+    }
+
+}
+
 void NeuralNetwork::backwardPropagation()
 {
     for(int nodeLayer = layers.size() - 1; nodeLayer >= 1; nodeLayer--){
@@ -203,24 +212,35 @@ void NeuralNetwork::train(DataSet dataSet, int epochs, double learningRate)
     for(int epochNumber = 0; epochNumber < epochs; epochNumber++){
         
         dataSet.shuffle();
-        std::vector<double> weights = getWeights();
+
+       
+
         std::vector<std::vector<double>> inputData = dataSet.getInputData();
         std::vector<std::vector<double>> inputLabels = dataSet.getInputLabels();  
 
-        for(unsigned int rowNumber = 0; rowNumber < nRows; rowNumber++){
+        //  std::cout<< "wei ------ : "<<std::endl;
+        //     for(unsigned int weightNumber = 0; weightNumber < inputLabels.size(); weightNumber++){
+        //             std::cout << inputData[weightNumber][1] << ";";
+        //         }
+        //         std::cout<< std::endl;
+
+        for(unsigned int rowNumber = 1; rowNumber < nRows; rowNumber++){
             forwardPropagation(inputData[rowNumber], inputLabels[rowNumber]);
             backwardPropagation();
+            std::vector<double> weights = getWeights();
             std::vector<double> gradient = getDeltas();
             for(unsigned int weightNumber = 0; weightNumber < weights.size(); weightNumber++){
                 weights[weightNumber] -= learningRate*gradient[weightNumber];
             }
             setWeights(weights);
         }
+        
 
-        double sumLoss = 0;
+        double error = 0;
         for(unsigned int rowNumber = 0; rowNumber < nRows; rowNumber++){
-            sumLoss += forwardPropagation(inputData[rowNumber], inputLabels[rowNumber]);
+            error += forwardPropagation(inputData[rowNumber], inputLabels[rowNumber]);
         }
+        std::cout << "Loss :" << error/nRows << std::endl; 
 
     }
 }
