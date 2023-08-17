@@ -14,6 +14,12 @@
 int main(int argc, char* argv[]) {
 
     try {
+
+        for(int i=1;i<argc;i++)
+        {
+        printf("%s",argv[i]);
+        std::cout << std::endl;
+        }
         std::string dataSetName = argv[1];
         double biases = std::stod(argv[2]);
         int epochs = std::stoi(argv[3]);
@@ -36,16 +42,16 @@ int main(int argc, char* argv[]) {
 
         if (dataSetName == "xo"){
             dataSetType = "classification";
-            inputDataPath = "./datasets/classification_train_data.csv";
-            inputLabelPath = "./datasets/classification_train_labels.csv";
+            inputDataPath = "../datasets/classification_train_data.csv";
+            inputLabelPath = "../datasets/classification_train_labels.csv";
             outputActivationType = ActivationType::SIGMOID;
             lossType = LossType::SOFTMAX;
             inputLayerSize = 100;
             outputLayerSize = 2;
         } else if (dataSetName == "y~x") {
             dataSetType = "regression";
-            inputDataPath = "./datasets/regression_train_data.csv";
-            inputLabelPath = "./datasets/regression_train_labels.csv";
+            inputDataPath = "../datasets/regression_train_data.csv";
+            inputLabelPath = "../datasets/regression_train_labels.csv";
             outputActivationType = ActivationType::LINEAR;
             lossType = LossType::L2NORM;
             inputLayerSize = 3;
