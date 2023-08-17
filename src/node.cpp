@@ -3,13 +3,14 @@
 #include <random>
 #include "edge.hpp"
 
+
 /**
  * @brief Construct a new Node:: Node object
  *
- * @param nodeType is the type of this node : "input", "hidden" or "output"
- * @param activationType is the activation type of thid node : "leakyrely", "sigmoid" or "linear"
+ * @param nodeType is the type of this node : INPUT, HIDDEN or OUTPUT
+ * @param activationType is the activation function of this node : LEAKYRELU, LINEAR or SIGMOID
  */
-Node::Node(std::string nodeType, std::string activationType)
+Node::Node(NodeType nodeType, ActivationType activationType)
     : preActivationValue(0),
       postActivationValue(0),
       delta(0),
@@ -118,11 +119,11 @@ void Node::addOutgoingEgde(Edge *edge) { outgoingEdges.push_back(edge); }
 void Node::forwardPropagation() {
     preActivationValue += bias;
 
-    if (activationType == "linear") {
+    if (activationType == ActivationType::LINEAR) {
         postActivationValue = preActivationValue;
-    } else if (activationType == "sigmoid") {
+    } else if (activationType == ActivationType::SIGMOID) {
         postActivationValue = std::exp(preActivationValue) / (1 + std::exp(preActivationValue));
-    } else if (activationType == "leakyrelu") {
+    } else if (activationType == ActivationType::LEAKYRELU) {
         if (preActivationValue > 0) {
             postActivationValue = preActivationValue;
         } else {
@@ -188,11 +189,11 @@ void Node::randomInitialization(double bias) {
  *
  */
 void Node::backwardPropagation() {
-    if (activationType == "linear") {
+    if (activationType == ActivationType::LINEAR) {
         // delta *= 1; let's avoid useless computation
-    } else if (activationType == "sigmoid") {
+    } else if (activationType == ActivationType::SIGMOID) {
         delta *= postActivationValue * (1 - postActivationValue);
-    } else if (activationType == "leakyrelu") {
+    } else if (activationType == ActivationType::LEAKYRELU) {
         if (preActivationValue > 0) {
             // delta *= 1; let's avoid useless computation
         } else {

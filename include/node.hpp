@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "node_type.hpp"
+#include "activation_type.hpp"
 
 typedef unsigned int uint;
 
@@ -22,9 +24,8 @@ class Node {
      * @param delta is the delta value of this node
      * @param bias is the bias value of this node
      * @param biasDelta is the bias delta value of this node
-     * @param nodeType is the type of this node : "input", "hidden" or "output"
-     * @param activationType is the activation type of thid node : "leakyrely", "sigmoid" or
-     * "linear"
+     * @param nodeType is the type of this node : INPUT, HIDDEN or OUTPUT
+     * @param activationType is the activation function of this node : LEAKYRELU, LINEAR or SIGMOID
      * @param incomingEdges is the list of Edges going to this Node
      * @param outgoingEdges is the list of Edges leaving this Node
      *
@@ -34,8 +35,8 @@ class Node {
     double delta;
     double bias;
     double biasDelta;
-    std::string nodeType;
-    std::string activationType;
+    NodeType nodeType;
+    ActivationType activationType;
     std::vector<Edge *> incomingEdges;
     std::vector<Edge *> outgoingEdges;
 
@@ -43,11 +44,10 @@ class Node {
     /**
      * @brief construct a new Node object
      *
-     * @param nodeType is the type of this node : "input", "hidden" or "output"
-     * @param activationType is the activation type of thid node : "leakyrely", "sigmoid" or
-     * "linear"
+     * @param nodeType is the type of this node : INPUT, HIDDEN or OUTPUT
+     * @param activationFunction is the activation function of this node : LEAKYRELU, LINEAR or SIGMOID
      */
-    Node(std::string nodeType, std::string activationType);
+    Node(NodeType nodeType, ActivationType activationType);
 
     /**
      * @brief set she pre activation value

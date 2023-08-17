@@ -12,29 +12,29 @@
  * @param outputLayerSize is the size of the output layer
  * @param hiddenActivationType is the activation type of the Nodes of the hidden layer
  * @param outputActivationType is the Activation type of the last layer
- * @param lossFunction is the loss function : "None", "L2 norm" or "Softmax"
+ * @param lossFunction is the loss function : NONE , L2NORM or SOFTMAX
  */
 NeuralNetwork::NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSizes,
-                             int outputLayerSize, std::string hiddenActivationType,
-                             std::string outputActivationType, std::string lossFunction)
+                             int outputLayerSize, ActivationType hiddenActivationType,
+                             ActivationType outputActivationType, LossType lossFunction)
     : lossFunction(lossFunction) {
     nWeights = 0;
     layers.resize(2 + hiddenLayerSizes.size());
-    std::string nodeType;
-    std::string activationType;
+    NodeType nodeType;
+    ActivationType activationType;
     int layerSize;
 
     for (uint layerIndex{0}; layerIndex < layers.size(); layerIndex++) {
         if (layerIndex == 0) {
-            nodeType = "input";
-            activationType = "linear";
+            nodeType = NodeType::INPUT;
+            activationType = ActivationType::LINEAR;
             layerSize = inputLayerSize;
         } else if (layerIndex == (layers.size() - 1)) {
-            nodeType = "output";
+            nodeType = NodeType::OUTPUT;
             activationType = outputActivationType;
             layerSize = outputLayerSize;
         } else {
-            nodeType = "hidden";
+            nodeType = NodeType::HIDDEN;
             activationType = hiddenActivationType;
             layerSize = hiddenLayerSizes[layerIndex - 1];
         }
@@ -96,15 +96,15 @@ double NeuralNetwork::forwardPropagation(std::vector<double> inputData,
         }
     }
 
-    double computedLoss = 0;
+    double computedLoss = 0.0;
     std::vector<double> outputValues = getOutputValues();
 
-    if (lossFunction == "None") {
+    if (lossFunction == LossType::NONE) {
         for (uint nodeIndex{0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++) {
             computedLoss += outputValues[nodeIndex];
             layers[outputLayerIndex][nodeIndex].setDelta(1.0);
         }
-    } else if (lossFunction == "L2 norm") {
+    } else if (lossFunction == LossType::L2NORM) {
         for (uint nodeIndex{0}; nodeIndex < layers[outputLayerIndex].size(); nodeIndex++) {
             computedLoss += (outputValues[nodeIndex] - inputLabels[nodeIndex]) *
                             (outputValues[nodeIndex] - inputLabels[nodeIndex]);
@@ -115,7 +115,7 @@ double NeuralNetwork::forwardPropagation(std::vector<double> inputData,
             layers[outputLayerIndex][nodeIndex].setDelta(
                 (outputValues[nodeIndex] - inputLabels[nodeIndex]) / computedLoss);
         }
-    } else if (lossFunction == "Softmax") {
+    } else if (lossFunction == LossType::SOFTMAX) {
         double sumExp = 0.0;
         uint label = int(inputLabels[0]);
 
@@ -275,17 +275,18 @@ std::vector<double> NeuralNetwork::getNumericGradient(std::vector<double> inputD
 
     double lossLeft;
     double lossRight;
+    double eps = 0.000000001;
 
     for (uint weightNumber = 0; weightNumber < weights.size(); weightNumber++) {
-        weightsCopy[weightNumber] = weights[weightNumber] - 0.000000001;
+        weightsCopy[weightNumber] = weights[weightNumber] - eps;
         setWeights(weightsCopy);
         lossLeft = forwardPropagation(inputData, inputLabels);
 
-        weightsCopy[weightNumber] = weights[weightNumber] + 0.000000001;
+        weightsCopy[weightNumber] = weights[weightNumber] + eps;
         setWeights(weightsCopy);
         lossRight = forwardPropagation(inputData, inputLabels);
 
-        gradient.push_back((lossRight - lossLeft) / (2.0 * 0.000000001));
+        gradient.push_back((lossRight - lossLeft) / (2.0 * eps));
 
         weightsCopy[weightNumber] = weights[weightNumber];
     }
@@ -334,7 +335,7 @@ void NeuralNetwork::train(DataSet dataset, int epochs, double learningRate, doub
 
         if (dataset.getType() == "classification") {
             std::cout << "Epoch : " << epochNumber << ", Loss over training set :" << error / nRows
-                      << ", Accuracy over training set : " << getAccuracy(dataset) << std::endl;
+                      << ", Accuracy over training set : " << getAccuracy(dataset) <<'%'<< std::endl;
         } else {
             std::cout << "Epoch : " << epochNumber << ", Loss :" << error / nRows << std::endl;
         }
@@ -345,26 +346,26 @@ void NeuralNetwork::train(DataSet dataset, int epochs, double learningRate, doub
  * @brief compute accuracy of classifications
  *
  * @param dataset to pass to this NN
- * @return accuracy
+ * @return accuracy in %
  */
 double NeuralNetwork::getAccuracy(DataSet dataset) {
     matrix inputData = dataset.getInputData();
     matrix inputLabels = dataset.getInputLabels();
     int nRows = dataset.getnRows();
 
-    uint trueLabels = 0;
+    int trueLabels = 0;
 
-    for (uint currentRow = 0; currentRow < nRows; currentRow++) {
+    for (int currentRow = 0; currentRow < nRows; currentRow++) {
         forwardPropagation(inputData[currentRow], inputLabels[currentRow]);
         std::vector<double> outputValues = getOutputValues();
         std::vector<double>::iterator max =
             std::max_element(outputValues.begin(), outputValues.end());
-        uint predictedLabel = std::distance(outputValues.begin(), max);
+        int predictedLabel = std::distance(outputValues.begin(), max);
 
         if (predictedLabel == int(inputLabels[currentRow][0])) {
             trueLabels += 1;
         }
     }
 
-    return (double)trueLabels / nRows;
+    return (double)trueLabels * 100 / nRows;
 }

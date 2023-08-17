@@ -6,8 +6,8 @@ import pandas as pd
 def generate_regression_dataset(n : int = 100, 
                                 start_range : float = -2.5, 
                                 end_range : float = 2.5,
-                                data_path : str = './src/datasets/regression_data.csv',
-                                labels_path : str = './src/datasets/regression_labels.csv') -> None:
+                                data_path : str = './datasets/regression_train_data.csv',
+                                labels_path : str = './datasets/regression_train_labels.csv') -> None:
     #Simulate regression Y = 2 + X + 2*X^2
     step = 5/n
     X = np.arange(start_range, end_range, step)
@@ -20,8 +20,8 @@ def generate_regression_dataset(n : int = 100,
     df_data.to_csv(data_path, index=False, header=False)
 
 def generate_XO_dataset(n : int = 200,
-                        data_path : str = './src/datasets/classification_data.csv',
-                        labels_path : str = './src/datasets/classification_labels.csv') -> None:
+                        data_path : str = './datasets/classification_train_data.csv',
+                        labels_path : str = './datasets/classification_train_labels.csv') -> None:
 
     df_data = pd.DataFrame(columns=['pixel_' + str(i) for i in range(10*10)])
     df_labels = pd.DataFrame(columns=['labels'])

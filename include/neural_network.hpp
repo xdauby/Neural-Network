@@ -6,6 +6,9 @@
 #include "data_set.hpp"
 #include "edge.hpp"
 #include "node.hpp"
+#include "activation_type.hpp"
+#include "loss_type.hpp"
+#include "node_type.hpp"
 
 typedef unsigned int uint;
 typedef std::vector<std::vector<double>> matrix;
@@ -18,11 +21,11 @@ class NeuralNetwork {
    private:
     /**
      * @param layers is a matrix of nodes
-     * @param lossFunction is the loss : "None", "L2 norm" or "Softmax"
+     * @param lossFunction is the loss : None, L2NORM or SOFTMAX
      * @param nWeights is the number of weights of this NN
      */
     std::vector<std::vector<Node>> layers;
-    std::string lossFunction;
+    LossType lossFunction;
     uint nWeights;
 
    public:
@@ -34,11 +37,11 @@ class NeuralNetwork {
      * @param outputLayerSize is the size of the output layer
      * @param hiddenActivationType is the activation type of the Nodes of the hidden layer
      * @param outputActivationType is the Activation type of the last layer
-     * @param lossFunction is the loss function : "None", "L2 norm" or "Softmax"
+     * @param lossFunction is the loss function : None, L2NORM or SOFTMAX
      */
     NeuralNetwork(int inputLayerSize, std::vector<int> hiddenLayerSizes, int outputLayerSize,
-                  std::string hiddenActivationType, std::string outputActivationType,
-                  std::string lossFunction);
+                  ActivationType hiddenActivationType, ActivationType outputActivationType,
+                  LossType lossFunction);
 
     /**
      * @brief set weights object
